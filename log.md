@@ -1208,3 +1208,52 @@ output/
 ├── admin-portal.html         # 内部管理门户
 └── log.md                   # 开发日志
 ``` 
+
+### 17. 英文版客户门户争议类型数据修正 (2024-12-01)
+
+**修改时间**: 2024-12-01
+**修改文件**: `customer-portal-en.html`
+
+**问题分析**:
+用户发现争议类型字段存在不一致问题，部分页面出现了除`fraud`和`dispute`之外的其他值。
+
+#### 17.1 问题根源
+- **中文版客户门户**和**管理员门户**：已正确更新为`fraud`和`dispute`
+- **英文版客户门户**：遗留了旧的争议类型值：
+  - `'Duplicate Processing'` → 应为 `'dispute'`
+  - `'Product Service'` → 应为 `'dispute'` 
+  - `'Processing Error'` → 应为 `'fraud'`
+  - `'Fraud Transaction'` → 应为 `'fraud'`
+
+#### 17.2 修正内容
+- **数据统一化**：将英文版客户门户的5条预警记录争议类型修正为：
+  - Record 1: `'fraud'` ✓ (已正确)
+  - Record 2: `'dispute'` (修正：`'Duplicate Processing'` → `'dispute'`)
+  - Record 3: `'dispute'` (修正：`'Product Service'` → `'dispute'`)
+  - Record 4: `'fraud'` (修正：`'Processing Error'` → `'fraud'`)
+  - Record 5: `'fraud'` ✓ (已正确)
+
+- **金额格式统一**：同时修正了金额格式
+  - 旧格式：`'$850.00'`, `'$1,500.00'`
+  - 新格式：`'850.00 USD'`, `'1500.00 USD'`
+
+#### 17.3 数据分布
+修正后三个平台的争议类型分布完全一致：
+- **fraud类型**：3条记录 (60%)
+- **dispute类型**：2条记录 (40%)
+
+#### 17.4 验证结果
+- ✅ 中文版客户门户：5条记录，争议类型 = [fraud, dispute, dispute, fraud, fraud]
+- ✅ 英文版客户门户：5条记录，争议类型 = [fraud, dispute, dispute, fraud, fraud]  
+- ✅ 管理员门户：5条记录，争议类型 = [fraud, dispute, dispute, fraud, fraud]
+
+**修正影响**:
+- 三个平台数据完全统一
+- 筛选功能正常工作
+- 样式类映射正确
+- 用户界面显示一致
+
+**经验教训**:
+- 多文件修改时需要确保所有相关文件同步更新
+- 应建立数据一致性检查机制
+- 代码review时需要特别关注数据结构变更的完整性
