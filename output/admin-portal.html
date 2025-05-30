@@ -1,0 +1,3144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拒付预警管理平台 - 内部管理</title>
+  <style>
+    /* CSS变量定义 */
+    :root {
+      /* 主色调 - 橙色系 */
+      --primary-orange: #FF6B35;
+      --primary-orange-light: #FF8659;
+      --primary-orange-dark: #E55A2B;
+      --primary-orange-pale: #FFF4F0;
+
+      /* 辅助色彩 */
+      --secondary-blue: #2E86C1;
+      --secondary-green: #28B463;
+      --secondary-red: #E74C3C;
+      --secondary-yellow: #F39C12;
+
+      /* 中性色彩 */
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+
+      /* 背景色彩 */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
+
+      /* 状态色彩 */
+      --success: #22C55E;
+      --success-light: #DCFCE7;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --danger: #EF4444;
+      --danger-light: #FEE2E2;
+      --info: #3B82F6;
+      --info-light: #DBEAFE;
+
+      /* 风险等级色彩 */
+      --risk-high: #DC2626;
+      --risk-medium: #F59E0B;
+      --risk-low: #16A34A;
+
+      /* 字体规范 */
+      --font-family-base: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+      --font-family-number: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+      /* 字体大小 */
+      --font-size-h1: 32px;
+      --font-size-h2: 24px;
+      --font-size-h3: 20px;
+      --font-size-h4: 18px;
+      --font-size-h5: 16px;
+      --font-size-base: 14px;
+      --font-size-large: 16px;
+      --font-size-small: 12px;
+      --font-size-xs: 10px;
+
+      /* 间距系统 */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+
+      /* 圆角与阴影 */
+      --border-radius-sm: 4px;
+      --border-radius-md: 6px;
+      --border-radius-lg: 8px;
+      --border-radius-xl: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 全局样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      color: var(--gray-700);
+      background: var(--bg-secondary);
+    }
+
+    /* 通用组件样式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-orange);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-orange-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-text {
+      background: transparent;
+      color: var(--primary-orange);
+      padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .btn-block {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--bg-secondary);
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: var(--font-size-h4);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .card-body {
+      padding: var(--spacing-lg);
+    }
+
+    .form-field {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-orange);
+      box-shadow: 0 0 0 3px var(--primary-orange-pale);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      background: white;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .badge-info {
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: var(--border-radius-md);
+      font-weight: 600;
+      font-size: var(--font-size-small);
+      color: white;
+    }
+
+    .status-active { background: var(--success); }
+    .status-pending { background: var(--warning); }
+    .status-suspended { background: var(--danger); }
+    .status-closed { background: var(--gray-500); }
+
+    .status-toggle {
+      padding: 6px 12px;
+      border-radius: var(--border-radius-md);
+      font-weight: 600;
+      font-size: var(--font-size-small);
+      color: white;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .status-enabled { 
+      background: var(--success); 
+    }
+
+    .status-enabled:hover { 
+      background: var(--success-light); 
+      color: var(--success);
+    }
+
+    .status-disabled { 
+      background: var(--danger); 
+    }
+
+    .status-disabled:hover { 
+      background: var(--danger-light); 
+      color: var(--danger);
+    }
+
+    /* 拨动开关样式 */
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: var(--gray-300);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+
+    .toggle-switch.enabled {
+      background: var(--success);
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.enabled::before {
+      transform: translateX(24px);
+    }
+
+    .toggle-switch:hover {
+      opacity: 0.8;
+    }
+
+    .toggle-switch:active::before {
+      width: 26px;
+    }
+
+    /* 页面容器 */
+    .page {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* 登录页面样式 */
+    .login-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-orange-pale) 0%, var(--bg-primary) 100%);
+    }
+
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-orange);
+      border-radius: var(--border-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .login-title {
+      color: var(--gray-700);
+      font-size: var(--font-size-h2);
+      margin: 0;
+    }
+
+    .login-subtitle {
+      color: var(--gray-500);
+      margin-top: var(--spacing-sm);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .login-illustration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      background: var(--primary-orange-pale);
+      position: relative;
+    }
+
+    .illustration-placeholder {
+      width: 300px;
+      height: 300px;
+      background: var(--primary-orange);
+      border-radius: var(--border-radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: var(--font-size-h3);
+      text-align: center;
+    }
+
+    /* 主应用布局 */
+    .app-layout {
+      display: grid;
+      grid-template-areas: 
+        "header header"
+        "sidebar main";
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 64px 1fr;
+      height: 100vh;
+      background: var(--bg-secondary);
+    }
+
+    .app-header {
+      grid-area: header;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 var(--spacing-lg);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left .logo {
+      justify-content: flex-start;
+    }
+
+    .logo-text {
+      font-size: var(--font-size-large);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .role-badge {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 500;
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    .app-sidebar {
+      grid-area: sidebar;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--gray-200);
+      padding: var(--spacing-lg) 0;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      padding: 0 var(--spacing-md);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 12px var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .nav-item.active {
+      background: var(--primary-orange-pale);
+      color: var(--primary-orange);
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-main {
+      grid-area: main;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: var(--font-size-h2);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    /* 仪表板样式 */
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--border-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .metric-icon-orange { background: var(--primary-orange-pale); color: var(--primary-orange); }
+    .metric-icon-blue { background: var(--info-light); color: var(--info); }
+    .metric-icon-green { background: var(--success-light); color: var(--success); }
+    .metric-icon-red { background: var(--danger-light); color: var(--danger); }
+
+    .metric-content {
+      flex: 1;
+    }
+
+    .metric-value {
+      font-size: var(--font-size-h2);
+      font-weight: 700;
+      color: var(--gray-700);
+      font-family: var(--font-family-number);
+    }
+
+    .metric-label {
+      font-size: var(--font-size-base);
+      color: var(--gray-500);
+      margin-top: var(--spacing-xs);
+    }
+
+    /* 表格样式 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray-700);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .data-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .table-row:hover {
+      background: var(--bg-secondary);
+    }
+
+    /* 筛选栏 */
+    .filters-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .filters-left {
+      display: flex;
+      gap: var(--spacing-lg);
+      flex-wrap: wrap;
+    }
+
+    .filters-right {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      min-width: 120px;
+    }
+
+    .filter-group label {
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      color: var(--gray-600);
+    }
+
+    /* 统计卡片 */
+    .stats-card {
+      background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-dark) 100%);
+      color: white;
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stats-value {
+      font-size: 36px;
+      font-weight: 700;
+      font-family: var(--font-family-number);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stats-label {
+      font-size: var(--font-size-large);
+      opacity: 0.9;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    .stats-item {
+      text-align: center;
+      padding: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius-md);
+    }
+
+    .stats-item-value {
+      font-size: var(--font-size-h3);
+      font-weight: 600;
+      font-family: var(--font-family-number);
+    }
+
+    .stats-item-label {
+      font-size: var(--font-size-small);
+      opacity: 0.8;
+      margin-top: var(--spacing-xs);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .login-page {
+        grid-template-columns: 1fr;
+      }
+      
+      .login-illustration {
+        display: none;
+      }
+
+      .app-layout {
+        grid-template-areas: 
+          "header"
+          "main";
+        grid-template-columns: 1fr;
+      }
+      
+      .app-sidebar {
+        display: none;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filters-left {
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+    }
+
+    /* 动画效果 */
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 工具类 */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    /* 弹窗模态框样式 */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: var(--spacing-xl);
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: var(--font-size-h3);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--gray-100);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    .modal-body {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: flex-end;
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .form-error {
+      color: var(--danger);
+      font-size: var(--font-size-small);
+      margin-top: var(--spacing-xs);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录页面 -->
+  <div id="login-page" class="page active">
+    <div class="login-page">
+      <div class="login-container">
+        <div class="login-header">
+          <div class="logo">
+            <div class="logo-icon">管</div>
+          </div>
+          <h1 class="login-title">内部管理平台</h1>
+          <p class="login-subtitle">拒付预警管理系统</p>
+        </div>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+          <div class="form-field">
+            <label class="form-label">工号/邮箱</label>
+            <input type="text" class="form-input" placeholder="请输入工号或邮箱" required>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-input" placeholder="请输入密码" required>
+          </div>
+          
+          <div class="form-options">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox">
+              <span>记住密码</span>
+            </label>
+            <a href="#" class="btn-text">忘记密码？</a>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">登录</button>
+        </form>
+      </div>
+      
+      <div class="login-illustration">
+        <div class="illustration-placeholder">
+          拒付预警<br>内部管理平台
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主应用页面 -->
+  <div id="app-page" class="page">
+    <div class="app-layout">
+      <!-- 顶部导航栏 -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="logo">
+            <div class="logo-icon" style="width: 32px; height: 32px; font-size: 16px;">管</div>
+            <span class="logo-text">拒付预警管理平台 - 内部管理</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="user-menu">
+            <div class="user-avatar">王</div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+              <span style="color: var(--gray-700); font-weight: 500;">王管理员</span>
+              <span class="role-badge">平台管理员</span>
+            </div>
+            <button class="btn btn-text" onclick="handleLogout()">退出</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 侧边导航栏 -->
+      <aside class="app-sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+            <div class="nav-icon">📊</div>
+            <span>数据概览</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('merchants')">
+            <div class="nav-icon">🏢</div>
+            <span>客户管理</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('alerts')">
+            <div class="nav-icon">⚠️</div>
+            <span>预警管理</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('reports')">
+            <div class="nav-icon">📈</div>
+            <span>数据报表</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('system')">
+            <div class="nav-icon">⚙️</div>
+            <span>系统配置</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('logs')">
+            <div class="nav-icon">📋</div>
+            <span>操作日志</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- 主内容区域 -->
+      <main class="app-main">
+        <!-- 数据概览页面 -->
+        <div id="dashboard-content" class="content-page active">
+          <div class="page-header">
+            <h1 class="page-title">数据概览</h1>
+            <div class="page-actions">
+              <button class="btn btn-primary">刷新数据</button>
+            </div>
+          </div>
+          
+          <div class="dashboard">
+            <!-- 平台统计卡片 -->
+            <div class="stats-card">
+              <div class="stats-value">156</div>
+              <div class="stats-label">接入商户总数</div>
+              <div class="stats-grid">
+                <div class="stats-item">
+                  <div class="stats-item-value">1,234</div>
+                  <div class="stats-item-label">今日预警</div>
+                </div>
+                <div class="stats-item">
+                  <div class="stats-item-value">89.2%</div>
+                  <div class="stats-item-label">平台处理率</div>
+                </div>
+                <div class="stats-item">
+                  <div class="stats-item-value">99.8%</div>
+                  <div class="stats-item-label">系统可用率</div>
+                </div>
+                <div class="stats-item">
+                  <div class="stats-item-value">2.3s</div>
+                  <div class="stats-item-label">平均响应时间</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 关键指标卡片 -->
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-icon metric-icon-orange">🏢</div>
+                <div class="metric-content">
+                  <div class="metric-value">156</div>
+                  <div class="metric-label">接入商户</div>
+                </div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-icon metric-icon-blue">💳</div>
+                <div class="metric-content">
+                  <div class="metric-value">1,024</div>
+                  <div class="metric-label">授权卡片</div>
+                </div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-icon metric-icon-green">✅</div>
+                <div class="metric-content">
+                  <div class="metric-value">23,567</div>
+                  <div class="metric-label">处理预警</div>
+                </div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-icon metric-icon-red">🚨</div>
+                <div class="metric-content">
+                  <div class="metric-value">234</div>
+                  <div class="metric-label">待处理预警</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 图表区域 -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-lg);">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">30天预警趋势</h3>
+                  <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-text" style="background: var(--primary-orange); color: white; padding: 4px 8px;">30天</button>
+                    <button class="btn btn-text" style="padding: 4px 8px;">90天</button>
+                    <button class="btn btn-text" style="padding: 4px 8px;">1年</button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--gray-400); font-size: var(--font-size-large);">
+                    📈 平台预警趋势图
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">商户状态分布</h3>
+                </div>
+                <div class="card-body">
+                  <div style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--gray-400); font-size: var(--font-size-large);">
+                    🥧 商户状态饼图
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 活跃商户排行 -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">活跃商户排行</h3>
+                <a href="#" class="btn btn-text" onclick="showPage('merchants')">查看全部</a>
+              </div>
+              <div class="card-body">
+                <div style="overflow-x: auto;">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>排名</th>
+                        <th>商户名称</th>
+                        <th>预警数量</th>
+                        <th>处理率</th>
+                        <th>平均处理时间</th>
+                        <th>状态</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="table-row">
+                        <td>1</td>
+                        <td>ABC商户</td>
+                        <td>234</td>
+                        <td>95.7%</td>
+                        <td>1.2小时</td>
+                        <td><span class="status-badge status-active">正常</span></td>
+                      </tr>
+                      <tr class="table-row">
+                        <td>2</td>
+                        <td>XYZ商户</td>
+                        <td>187</td>
+                        <td>88.3%</td>
+                        <td>2.1小时</td>
+                        <td><span class="status-badge status-active">正常</span></td>
+                      </tr>
+                      <tr class="table-row">
+                        <td>3</td>
+                        <td>DEF商户</td>
+                        <td>156</td>
+                        <td>91.0%</td>
+                        <td>1.8小时</td>
+                        <td><span class="status-badge status-pending">暂停</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 客户管理页面 -->
+        <div id="merchants-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">客户管理</h1>
+            <div class="page-actions">
+              <button class="btn btn-secondary">导出客户</button>
+              <button class="btn btn-primary" onclick="showAddMerchantModal()">添加客户</button>
+            </div>
+          </div>
+          
+          <!-- 筛选栏 -->
+          <div class="filters-bar">
+            <div class="filters-left">
+              <div class="filter-group">
+                <label>客户名称</label>
+                <input type="text" class="form-input" placeholder="搜索客户名称" id="filter-customer-name">
+              </div>
+              
+              <div class="filter-group">
+                <label>登录邮箱</label>
+                <input type="text" class="form-input" placeholder="搜索邮箱" id="filter-customer-email">
+              </div>
+              
+              <div class="filter-group">
+                <label>状态</label>
+                <select class="form-select" id="filter-customer-status">
+                  <option value="">全部</option>
+                  <option value="enabled">启用</option>
+                  <option value="disabled">停用</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>注册时间范围</label>
+                <div style="display: flex; gap: var(--spacing-sm);">
+                  <input type="date" class="form-input" id="filter-register-start" style="width: 140px;">
+                  <span style="line-height: 2.5; color: var(--gray-500);">至</span>
+                  <input type="date" class="form-input" id="filter-register-end" style="width: 140px;">
+                </div>
+              </div>
+            </div>
+            
+            <div class="filters-right">
+              <button class="btn btn-secondary" onclick="resetCustomerFilters()">重置</button>
+              <button class="btn btn-primary" onclick="applyCustomerFilters()">搜索</button>
+            </div>
+          </div>
+          
+          <!-- 客户列表 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">客户列表</h3>
+              <div style="color: var(--gray-600);">
+                共 156 个客户
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>客户ID</th>
+                    <th>客户名称</th>
+                    <th>登录邮箱</th>
+                    <th>状态</th>
+                    <th>授权卡数</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-row">
+                    <td>M001</td>
+                    <td>ABC客户有限公司</td>
+                    <td>contact@abc.com</td>
+                    <td>
+                      <button class="toggle-switch enabled" onclick="toggleMerchantStatus('M001', 'enabled')" title="启用"></button>
+                    </td>
+                    <td>8</td>
+                    <td>2024-10-15 09:30:25</td>
+                    <td>
+                      <div style="display: flex; gap: var(--spacing-xs);">
+                        <button class="btn btn-text" onclick="showChangePasswordModal('M001')">修改密码</button>
+                        <button class="btn btn-text" onclick="showMerchantDetail('M001')">查看</button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <tr class="table-row">
+                    <td>M002</td>
+                    <td>XYZ网络科技</td>
+                    <td>admin@xyz.com</td>
+                    <td>
+                      <button class="toggle-switch enabled" onclick="toggleMerchantStatus('M002', 'enabled')" title="启用"></button>
+                    </td>
+                    <td>5</td>
+                    <td>2024-11-02 14:20:10</td>
+                    <td>
+                      <div style="display: flex; gap: var(--spacing-xs);">
+                        <button class="btn btn-text" onclick="showChangePasswordModal('M002')">修改密码</button>
+                        <button class="btn btn-text" onclick="showMerchantDetail('M002')">查看</button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <tr class="table-row">
+                    <td>M003</td>
+                    <td>DEF贸易公司</td>
+                    <td>info@def.com</td>
+                    <td>
+                      <button class="toggle-switch" onclick="toggleMerchantStatus('M003', 'disabled')" title="停用"></button>
+                    </td>
+                    <td>3</td>
+                    <td>2024-09-28 11:45:33</td>
+                    <td>
+                      <div style="display: flex; gap: var(--spacing-xs);">
+                        <button class="btn btn-text" onclick="showChangePasswordModal('M003')">修改密码</button>
+                        <button class="btn btn-text" onclick="showMerchantDetail('M003')">查看</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预警管理页面 -->
+        <div id="alerts-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">预警管理</h1>
+            <div class="page-actions">
+              <button class="btn btn-secondary">导出数据</button>
+              <button class="btn btn-primary">批量操作</button>
+            </div>
+          </div>
+          
+          <!-- 筛选栏 -->
+          <div class="filters-bar">
+            <div class="filters-left">
+              <div class="filter-group">
+                <label>接收时间范围</label>
+                <div style="display: flex; gap: var(--spacing-sm);">
+                  <input type="date" class="form-input" id="filter-receive-start" style="width: 140px;">
+                  <span style="line-height: 2.5; color: var(--gray-500);">至</span>
+                  <input type="date" class="form-input" id="filter-receive-end" style="width: 140px;">
+                </div>
+              </div>
+              
+              <div class="filter-group">
+                <label>争议类型</label>
+                <select class="form-select" id="filter-dispute-type">
+                  <option value="">全部类型</option>
+                  <option value="fraud">fraud</option>
+                  <option value="dispute">dispute</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>处理状态</label>
+                <select class="form-select" id="filter-process-status">
+                  <option value="">全部状态</option>
+                  <option value="待处理">待处理</option>
+                  <option value="处理中">处理中</option>
+                  <option value="已处理">已处理</option>
+                  <option value="已拒绝">已拒绝</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>商户</label>
+                <select class="form-select" id="filter-merchant">
+                  <option value="">全部商户</option>
+                  <option value="ABC商户">ABC商户</option>
+                  <option value="XYZ商户">XYZ商户</option>
+                  <option value="DEF商户">DEF商户</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="filters-right">
+              <button class="btn btn-secondary" onclick="resetAlertFilters()">重置</button>
+              <button class="btn btn-primary" onclick="applyAlertFilters()">搜索</button>
+            </div>
+          </div>
+          
+          <!-- 预警列表 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">预警列表</h3>
+              <div style="color: var(--gray-600);" id="alerts-count">
+                共 5 条预警
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox">
+                    </th>
+                    <th>接收时间</th>
+                    <th>争议类型</th>
+                    <th>预警来源</th>
+                    <th>交易金额</th>
+                    <th>商户</th>
+                    <th>客户联系人</th>
+                    <th>处理状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="alerts-table-body">
+                  <!-- 动态生成数据 -->
+                </tbody>
+              </table>
+                      </div>
+            
+            <!-- 分页器 -->
+            <div style="padding: var(--spacing-lg); border-top: 1px solid var(--gray-200); background: var(--bg-secondary);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="color: var(--gray-600);" id="alerts-pagination-info">
+                  显示 1-5 条，共 5 条记录
+                      </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                  <button class="btn btn-secondary" id="alerts-prev-btn" onclick="changeAlertsPage(-1)">上一页</button>
+                  <div style="display: flex; gap: var(--spacing-xs);" id="alerts-page-numbers">
+                    <!-- 动态生成页码 -->
+                  </div>
+                  <button class="btn btn-secondary" id="alerts-next-btn" onclick="changeAlertsPage(1)">下一页</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预警详情页面 -->
+        <div id="alert-detail-content" class="content-page">
+          <div style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-base); color: var(--gray-500); margin-bottom: var(--spacing-lg);">
+            <a href="#" onclick="showPage('alerts')" style="color: var(--primary-orange); text-decoration: none; cursor: pointer;">预警管理</a>
+            <span style="color: var(--gray-300);">/</span>
+            <span style="color: var(--gray-700); font-weight: 500;">预警详情</span>
+          </div>
+          
+          <!-- 基础信息 -->
+          <div style="background: var(--bg-primary); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-lg);">
+              <div>
+                <h1 style="margin: 0; font-size: var(--font-size-h2); font-weight: 600; color: var(--gray-700);">基础信息</h1>
+                <span style="font-family: var(--font-family-number); font-size: var(--font-size-large); color: var(--gray-500); font-weight: 500;" id="detail-alert-id">CHB_20241201_001</span>
+              </div>
+              <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                <span class="badge" id="detail-dispute-type">非授权交易</span>
+                <span class="badge badge-warning" id="detail-status">待处理</span>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-lg);">
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">接收时间</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-receive-time">2024-12-01 14:30:25</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">预警时间</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-alert-time">2024-12-01 14:28:10</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">预警ID</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-alert-id-copy">CHB_20241201_001</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议类型</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-dispute-type-copy">非授权交易</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">预警来源</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-source">V卡</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易金额</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-amount">$1,250.00 USD</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">商户名称</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-merchant">ABC商户</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">描述摘要</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="detail-description">客户声称未进行此笔交易</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 更多信息 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">更多信息</h3>
+            </div>
+            <div class="card-body">
+              <!-- V卡信息 -->
+              <div id="visa-details" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡BIN</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-bin">418756</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">CAID</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-caid">CA001234</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡号</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-card-number">****1234</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">收单银行BIN</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-acquirer-bin">123456</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">收单银行参考号</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-acquirer-ref">REF123456789</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">授权码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-auth-code">AUTH123</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">拒付原因代码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-reason-code">10.4</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">描述联系人</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-contact">John Smith</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议金额</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-dispute-amount">$1,250.00</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">商户类别代码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-mcc">5411</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">规则名称</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-rule-name">非授权交易规则</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">规则类型</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-rule-type">防欺诈</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易日期</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-transaction-date">2024-11-30</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- M卡信息 -->
+              <div id="mastercard-details" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">ARN</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-arn">12345678901234567890123</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">授权码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-auth-code">AUTH456</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡BIN</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-bin">512345</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡号</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-card-number">****5678</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">拒付原因代码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-reason-code">4837</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议金额</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-dispute-amount">$850.00</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">Initiated By</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-initiated-by">持卡人</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">发卡机构名称</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-issuer-name">招商银行</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">是否3D责任方</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-3d-liability">否</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">商户类别代码</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-mcc">5999</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易ID</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-id">TXN_987654322</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易时间</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-time">2024-11-30 15:30:20</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易类型</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-type">在线支付</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 客户反馈（仅M卡显示且有反馈时显示） -->
+          <div class="card" id="feedback-view-section" style="display: none;">
+            <div class="card-header">
+              <h3 class="card-title">客户反馈 <span class="badge badge-success">已提交</span></h3>
+            </div>
+            <div class="card-body">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">反馈结果</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-result">stopped</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">退款状态</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-refund-status">已退款</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">是否欺诈</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-is-fraud">否</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">补充意见</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-comment">客户未授权此笔交易，已及时处理</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">匹配的流水单号</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-transaction-ref">TXN_20241201_001</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">退款单号</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-refund-id">REF_20241201_001</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">退款日期</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-refund-date">2024-12-01 16:30:00</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">退款币种</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-refund-currency">USD</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                  <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">退款金额</span>
+                  <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="feedback-refund-amount">850.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据报表页面 -->
+        <div id="reports-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">数据报表</h1>
+            <div class="page-actions">
+              <button class="btn btn-secondary">生成报告</button>
+              <button class="btn btn-primary">导出数据</button>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">预警来源分析</h3>
+              </div>
+              <div class="card-body">
+                <div style="height: 250px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--gray-400);">
+                  🥧 预警来源饼图
+                </div>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">处理效果统计</h3>
+              </div>
+              <div class="card-body">
+                <div style="height: 250px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--gray-400);">
+                  📊 处理效果柱状图
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">平台运营分析</h3>
+            </div>
+            <div class="card-body">
+              <div style="height: 350px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--gray-400);">
+                📈 平台运营综合分析图表
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 系统配置页面 -->
+        <div id="system-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">系统配置</h1>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+            <!-- 接口配置 -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">拒付通接口配置</h3>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="form-field">
+                    <label class="form-label">接口地址</label>
+                    <input type="url" class="form-input" value="https://api.tradefensor.com" readonly>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">商户号</label>
+                    <input type="text" class="form-input" value="TF_123456789">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">签名密钥</label>
+                    <input type="password" class="form-input" value="••••••••••••••••">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">超时时间(秒)</label>
+                    <input type="number" class="form-input" value="30">
+                  </div>
+                  
+                  <div style="display: flex; gap: var(--spacing-sm);">
+                    <button type="button" class="btn btn-secondary">测试连接</button>
+                    <button type="submit" class="btn btn-primary">保存配置</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            
+            <!-- 邮件配置 -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">邮件通知配置</h3>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="form-field">
+                    <label class="form-label">SMTP服务器</label>
+                    <input type="text" class="form-input" value="smtp.company.com">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">端口</label>
+                    <input type="number" class="form-input" value="587">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">发件邮箱</label>
+                    <input type="email" class="form-input" value="alert@company.com">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">邮箱密码</label>
+                    <input type="password" class="form-input" value="••••••••">
+                  </div>
+                  
+                  <div style="display: flex; gap: var(--spacing-sm);">
+                    <button type="button" class="btn btn-secondary">发送测试邮件</button>
+                    <button type="submit" class="btn btn-primary">保存配置</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 系统参数配置 -->
+          <div class="card" style="margin-top: var(--spacing-xl);">
+            <div class="card-header">
+              <h3 class="card-title">系统参数配置</h3>
+            </div>
+            <div class="card-body">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+                <div>
+                  <div class="form-field">
+                    <label class="form-label">预警有效期(小时)</label>
+                    <input type="number" class="form-input" value="72">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">自动处理超时(小时)</label>
+                    <input type="number" class="form-input" value="24">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">数据保留期(天)</label>
+                    <input type="number" class="form-input" value="365">
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="form-field">
+                    <label class="form-label">最大文件大小(MB)</label>
+                    <input type="number" class="form-input" value="10">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">分页大小</label>
+                    <input type="number" class="form-input" value="20">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">系统维护模式</label>
+                    <select class="form-select">
+                      <option>正常模式</option>
+                      <option>维护模式</option>
+                      <option>只读模式</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid var(--gray-200);">
+                <button class="btn btn-primary">保存系统参数</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作日志页面 -->
+        <div id="logs-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">操作日志</h1>
+            <div class="page-actions">
+              <button class="btn btn-primary">导出日志</button>
+            </div>
+          </div>
+          
+          <!-- 筛选栏 -->
+          <div class="filters-bar">
+            <div class="filters-left">
+              <div class="filter-group">
+                <label>时间范围</label>
+                <select class="form-select">
+                  <option>今天</option>
+                  <option>最近7天</option>
+                  <option>最近30天</option>
+                  <option>自定义</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>操作类型</label>
+                <select class="form-select">
+                  <option>全部</option>
+                  <option>登录</option>
+                  <option>商户管理</option>
+                  <option>预警处理</option>
+                  <option>系统配置</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>操作人</label>
+                <input type="text" class="form-input" placeholder="搜索操作人">
+              </div>
+            </div>
+            
+            <div class="filters-right">
+              <button class="btn btn-secondary">重置</button>
+              <button class="btn btn-primary">搜索</button>
+            </div>
+          </div>
+          
+          <!-- 日志列表 -->
+          <div class="card">
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>时间</th>
+                    <th>操作人</th>
+                    <th>操作类型</th>
+                    <th>操作内容</th>
+                    <th>IP地址</th>
+                    <th>结果</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-row">
+                    <td>2024-12-01 15:30:25</td>
+                    <td>王管理员</td>
+                    <td>商户管理</td>
+                    <td>暂停商户: ABC商户 (M001)</td>
+                    <td>192.168.1.100</td>
+                    <td><span class="badge badge-success">成功</span></td>
+                  </tr>
+                  
+                  <tr class="table-row">
+                    <td>2024-12-01 15:25:12</td>
+                    <td>李管理员</td>
+                    <td>预警处理</td>
+                    <td>处理预警: CHB_20241201_001</td>
+                    <td>192.168.1.101</td>
+                    <td><span class="badge badge-success">成功</span></td>
+                  </tr>
+                  
+                  <tr class="table-row">
+                    <td>2024-12-01 15:20:45</td>
+                    <td>张管理员</td>
+                    <td>系统配置</td>
+                    <td>修改接口超时时间</td>
+                    <td>192.168.1.102</td>
+                    <td><span class="badge badge-success">成功</span></td>
+                  </tr>
+                  
+                  <tr class="table-row">
+                    <td>2024-12-01 15:15:33</td>
+                    <td>王管理员</td>
+                    <td>登录</td>
+                    <td>管理员登录系统</td>
+                    <td>192.168.1.100</td>
+                    <td><span class="badge badge-success">成功</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 商户详情页面 -->
+        <div id="merchant-detail-content" class="content-page">
+          <div style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-base); color: var(--gray-500); margin-bottom: var(--spacing-lg);">
+            <a href="#" onclick="showPage('merchants')" style="color: var(--primary-orange); text-decoration: none; cursor: pointer;">客户管理</a>
+            <span style="color: var(--gray-300);">/</span>
+            <span style="color: var(--gray-700); font-weight: 500;">客户详情</span>
+          </div>
+          
+          <!-- 客户基础信息 -->
+          <div style="background: var(--bg-primary); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-lg);">
+              <div>
+                <h1 style="margin: 0; font-size: var(--font-size-h2); font-weight: 600; color: var(--gray-700);">客户信息</h1>
+                <span style="font-family: var(--font-family-number); font-size: var(--font-size-large); color: var(--gray-500); font-weight: 500;" id="merchant-detail-id">M001</span>
+              </div>
+              <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                <button class="toggle-switch enabled" id="merchant-detail-status" title="启用"></button>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-lg);">
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">客户名称</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-name">ABC客户有限公司</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">联系人</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-contact">张三</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">登录邮箱</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-email">contact@abc.com</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">授权卡片数量</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-card-count">8</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">创建时间</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-register-time">2024-10-15 09:30:25</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">最后登录时间</span>
+                <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="merchant-detail-last-login">2024-12-01 10:30:25</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 授权卡片列表 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">授权卡片</h3>
+              <div style="color: var(--gray-600);" id="merchant-cards-count">
+                共 8 张卡片
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>卡片ID</th>
+                    <th>卡片类型</th>
+                    <th>卡片信息</th>
+                    <th>描述</th>
+                    <th>通知邮箱</th>
+                    <th>授权时间</th>
+                    <th>最后使用</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="merchant-cards-table-body">
+                  <!-- 动态生成数据 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 添加客户模态框 -->
+  <div id="add-customer-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">添加客户</h3>
+        <button class="modal-close" onclick="closeModal('add-customer-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-customer-form">
+          <div class="form-field">
+            <label class="form-label">客户名称 <span style="color: var(--danger);">*</span></label>
+            <input type="text" class="form-input" id="customer-name" placeholder="请输入客户名称" required>
+            <div class="form-error" id="customer-name-error">请输入客户名称</div>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">登录邮箱 <span style="color: var(--danger);">*</span></label>
+            <input type="email" class="form-input" id="customer-email" placeholder="请输入邮箱地址" required>
+            <div class="form-error" id="customer-email-error">请输入正确的邮箱格式</div>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">登录密码 <span style="color: var(--danger);">*</span></label>
+            <input type="password" class="form-input" id="customer-password" placeholder="请输入密码" required>
+            <div class="form-error" id="customer-password-error">密码长度至少6位</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('add-customer-modal')">取消</button>
+        <button class="btn btn-primary" onclick="addCustomer()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改密码模态框 -->
+  <div id="change-password-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">修改密码</h3>
+        <button class="modal-close" onclick="closeModal('change-password-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: var(--spacing-md); padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--border-radius-md);">
+          <div style="font-weight: 500; margin-bottom: var(--spacing-xs);">客户信息</div>
+          <div style="color: var(--gray-600); font-size: var(--font-size-small);">
+            <span id="change-password-customer-name">ABC客户有限公司</span> (<span id="change-password-customer-id">M001</span>)
+          </div>
+        </div>
+        <form id="change-password-form">
+          <div class="form-field">
+            <label class="form-label">新密码 <span style="color: var(--danger);">*</span></label>
+            <input type="password" class="form-input" id="new-password" placeholder="请输入新密码" required>
+            <div class="form-error" id="new-password-error">密码长度至少6位</div>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">确认密码 <span style="color: var(--danger);">*</span></label>
+            <input type="password" class="form-input" id="confirm-password" placeholder="请再次输入新密码" required>
+            <div class="form-error" id="confirm-password-error">两次输入的密码不一致</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('change-password-modal')">取消</button>
+        <button class="btn btn-primary" onclick="changePassword()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟预警数据
+    let alertsData = [
+      {
+        id: 1,
+        alertId: 'CHB_20241201_001',
+        receiveTime: '2024-12-01 14:30:25',
+        alertTime: '2024-12-01 14:28:10',
+        disputeType: 'fraud',
+        source: 'V卡',
+        amount: '1250.00 USD',
+        merchant: 'ABC商户',
+        contact: 'John Smith',
+        description: '客户声称未进行此笔交易',
+        status: '待处理',
+        // V卡特有字段
+        cardBin: '418756',
+        caid: 'CA001234',
+        cardNumber: '****1234',
+        acquirerBin: '123456',
+        acquirerRef: 'REF123456789',
+        authCode: 'AUTH123',
+        reasonCode: '10.4',
+        disputeAmount: '1250.00 USD',
+        mcc: '5411',
+        ruleName: '非授权交易规则',
+        ruleType: '防欺诈',
+        transactionDate: '2024-11-30'
+      },
+      {
+        id: 2,
+        alertId: 'CHB_20241201_002',
+        receiveTime: '2024-12-01 13:45:10',
+        alertTime: '2024-12-01 13:42:55',
+        disputeType: 'dispute',
+        source: 'M卡',
+        amount: '850.00 USD',
+        merchant: 'XYZ商户',
+        contact: '张三',
+        description: '发现重复的交易处理',
+        status: '已处理',
+        // M卡特有字段
+        arn: '12345678901234567890123',
+        authCode: 'AUTH456',
+        cardBin: '512345',
+        cardNumber: '****5678',
+        reasonCode: '4837',
+        disputeAmount: '850.00 USD',
+        initiatedBy: '持卡人',
+        issuerName: '招商银行',
+        liability3D: '否',
+        mcc: '5999',
+        transactionId: 'TXN_987654322',
+        transactionTime: '2024-11-30 15:30:20',
+        transactionType: '在线支付',
+        // 客户反馈信息（M卡才有）
+        hasFeedback: true,
+        feedbackResult: 'stopped',
+        feedbackRefundStatus: '已退款',
+        feedbackIsFraud: '否',
+        feedbackComment: '客户未授权此笔交易，已及时处理',
+        feedbackTransactionRef: 'TXN_20241201_001',
+        feedbackRefundId: 'REF_20241201_001',
+        feedbackRefundDate: '2024-12-01 16:30:00',
+        feedbackRefundCurrency: 'USD',
+        feedbackRefundAmount: '850.00'
+      },
+      {
+        id: 3,
+        alertId: 'CHB_20241130_003',
+        receiveTime: '2024-11-30 16:20:30',
+        alertTime: '2024-11-30 16:18:45',
+        disputeType: 'dispute',
+        source: 'V卡',
+        amount: '320.00 USD',
+        merchant: 'DEF商户',
+        contact: 'Alice Johnson',
+        description: '客户对商品质量有异议',
+        status: '已处理',
+        cardBin: '456789',
+        caid: 'CA005678',
+        cardNumber: '****9876',
+        acquirerBin: '654321',
+        acquirerRef: 'REF987654321',
+        authCode: 'AUTH789',
+        reasonCode: '13.1',
+        disputeAmount: '320.00 USD',
+        mcc: '5732',
+        ruleName: '商品质量规则',
+        ruleType: '消费者保护',
+        transactionDate: '2024-11-28'
+      },
+      {
+        id: 4,
+        alertId: 'CHB_20241130_004',
+        receiveTime: '2024-11-30 11:15:20',
+        alertTime: '2024-11-30 11:12:35',
+        disputeType: 'fraud',
+        source: 'M卡',
+        amount: '1500.00 USD',
+        merchant: 'GHI商户',
+        contact: '李四',
+        description: '交易处理过程中出现错误',
+        status: '处理中',
+        arn: '98765432109876543210987',
+        authCode: 'AUTH321',
+        cardBin: '378901',
+        cardNumber: '****4321',
+        reasonCode: '4855',
+        disputeAmount: '1500.00 USD',
+        initiatedBy: '商户',
+        issuerName: '工商银行',
+        liability3D: '是',
+        mcc: '5812',
+        transactionId: 'TXN_456789123',
+        transactionTime: '2024-11-29 10:45:15',
+        transactionType: '移动支付',
+        hasFeedback: false
+      },
+      {
+        id: 5,
+        alertId: 'CHB_20241129_005',
+        receiveTime: '2024-11-29 09:30:45',
+        alertTime: '2024-11-29 09:28:20',
+        disputeType: 'fraud',
+        source: 'V卡',
+        amount: '2100.00 USD',
+        merchant: 'JKL商户',
+        contact: 'Bob Wilson',
+        description: '疑似欺诈性交易活动',
+        status: '已拒绝',
+        cardBin: '123456',
+        caid: 'CA009876',
+        cardNumber: '****5555',
+        acquirerBin: '789012',
+        acquirerRef: 'REF555666777',
+        authCode: 'AUTH555',
+        reasonCode: '10.5',
+        disputeAmount: '2100.00 USD',
+        mcc: '5499',
+        ruleName: '欺诈检测规则',
+        ruleType: '风险控制',
+        transactionDate: '2024-11-27'
+      }
+    ];
+
+    let filteredAlertsData = [...alertsData];
+    let currentAlertsPage = 1;
+    let alertsPerPage = 10;
+
+    // 商户数据
+    let merchantsData = [
+      {
+        id: 'M001',
+        name: 'ABC商户有限公司',
+        contact: '张三',
+        email: 'contact@abc.com',
+        cardCount: 8,
+        registerTime: '2024-10-15 09:30:25',
+        lastLogin: '2024-12-01 10:30:25',
+        status: 'enabled',
+        cards: [
+          {
+            id: 'CARD001',
+            type: 'V卡',
+            cardInfo: '418756******1234',
+            description: '主要支付卡片',
+            notificationEmail: 'card001@abc.com',
+            authTime: '2024-10-15 09:35:20',
+            lastUsed: '2024-12-01 14:25:30',
+            status: 'active'
+          },
+          {
+            id: 'CARD002',
+            type: 'M卡',
+            cardInfo: '512345******5678',
+            description: '备用支付卡片',
+            notificationEmail: 'card002@abc.com',
+            authTime: '2024-10-16 10:20:15',
+            lastUsed: '2024-11-30 16:45:22',
+            status: 'active'
+          },
+          {
+            id: 'CARD003',
+            type: 'V卡',
+            cardInfo: '456789******9876',
+            description: '高额交易专用卡',
+            notificationEmail: 'card003@abc.com',
+            authTime: '2024-10-20 14:15:30',
+            lastUsed: '2024-11-28 09:20:45',
+            status: 'active'
+          },
+          {
+            id: 'CARD004',
+            type: 'M卡',
+            cardInfo: '378901******4321',
+            description: '临时测试卡片',
+            notificationEmail: 'test@abc.com',
+            authTime: '2024-10-25 11:30:45',
+            lastUsed: '2024-11-25 15:30:20',
+            status: 'inactive'
+          },
+          {
+            id: 'CARD005',
+            type: 'V卡',
+            cardInfo: '123456******5555',
+            description: '线上交易专用',
+            notificationEmail: 'online@abc.com',
+            authTime: '2024-11-01 13:20:10',
+            lastUsed: '2024-11-20 10:15:30',
+            status: 'active'
+          },
+          {
+            id: 'CARD006',
+            type: 'M卡',
+            cardInfo: '654321******7777',
+            description: '移动支付卡片',
+            notificationEmail: 'mobile@abc.com',
+            authTime: '2024-11-05 16:45:25',
+            lastUsed: '2024-11-18 14:20:15',
+            status: 'active'
+          },
+          {
+            id: 'CARD007',
+            type: 'V卡',
+            cardInfo: '789012******8888',
+            description: '已暂停使用',
+            notificationEmail: 'suspended@abc.com',
+            authTime: '2024-11-10 09:15:40',
+            lastUsed: '2024-11-15 11:30:20',
+            status: 'suspended'
+          },
+          {
+            id: 'CARD008',
+            type: 'M卡',
+            cardInfo: '345678******9999',
+            description: '新开通卡片',
+            notificationEmail: 'new@abc.com',
+            authTime: '2024-11-12 15:20:50',
+            lastUsed: '2024-11-12 15:25:10',
+            status: 'active'
+          }
+        ]
+      },
+      {
+        id: 'M002',
+        name: 'XYZ网络科技',
+        contact: '李四',
+        email: 'admin@xyz.com',
+        cardCount: 5,
+        registerTime: '2024-11-02 14:20:10',
+        lastLogin: '2024-11-30 16:45:30',
+        status: 'enabled',
+        cards: [
+          {
+            id: 'CARD009',
+            type: 'V卡',
+            cardInfo: '418756******2222',
+            description: '主营业务卡片',
+            notificationEmail: 'main@xyz.com',
+            authTime: '2024-11-02 14:25:15',
+            lastUsed: '2024-11-30 16:40:20',
+            status: 'active'
+          },
+          {
+            id: 'CARD010',
+            type: 'M卡',
+            cardInfo: '512345******3333',
+            description: '技术服务专用',
+            notificationEmail: 'tech@xyz.com',
+            authTime: '2024-11-03 10:30:20',
+            lastUsed: '2024-11-29 14:20:15',
+            status: 'active'
+          },
+          {
+            id: 'CARD011',
+            type: 'V卡',
+            cardInfo: '456789******4444',
+            description: '客户服务卡片',
+            notificationEmail: 'service@xyz.com',
+            authTime: '2024-11-05 15:45:30',
+            lastUsed: '2024-11-28 10:15:25',
+            status: 'active'
+          },
+          {
+            id: 'CARD012',
+            type: 'M卡',
+            cardInfo: '378901******6666',
+            description: '备用卡片',
+            notificationEmail: 'backup@xyz.com',
+            authTime: '2024-11-08 11:20:40',
+            lastUsed: '2024-11-27 16:30:15',
+            status: 'inactive'
+          },
+          {
+            id: 'CARD013',
+            type: 'V卡',
+            cardInfo: '123456******7777',
+            description: '营销推广专用',
+            notificationEmail: 'marketing@xyz.com',
+            authTime: '2024-11-10 13:15:20',
+            lastUsed: '2024-11-26 09:20:30',
+            status: 'active'
+          }
+        ]
+      },
+      {
+        id: 'M003',
+        name: 'DEF贸易公司',
+        contact: '王五',
+        email: 'info@def.com',
+        cardCount: 3,
+        registerTime: '2024-09-28 11:45:33',
+        lastLogin: '2024-11-20 14:30:15',
+        status: 'disabled',
+        cards: [
+          {
+            id: 'CARD014',
+            type: 'V卡',
+            cardInfo: '418756******8888',
+            description: '贸易结算卡片',
+            notificationEmail: 'trade@def.com',
+            authTime: '2024-09-28 11:50:20',
+            lastUsed: '2024-11-20 14:25:10',
+            status: 'suspended'
+          },
+          {
+            id: 'CARD015',
+            type: 'M卡',
+            cardInfo: '512345******9999',
+            description: '国际支付卡片',
+            notificationEmail: 'international@def.com',
+            authTime: '2024-09-30 16:20:15',
+            lastUsed: '2024-11-18 10:15:30',
+            status: 'suspended'
+          },
+          {
+            id: 'CARD016',
+            type: 'V卡',
+            cardInfo: '456789******0000',
+            description: '供应商支付卡',
+            notificationEmail: 'supplier@def.com',
+            authTime: '2024-10-02 09:30:25',
+            lastUsed: '2024-11-15 15:20:45',
+            status: 'suspended'
+          }
+        ]
+      }
+    ];
+
+    // 按注册时间倒序排序
+    merchantsData.sort((a, b) => new Date(b.registerTime) - new Date(a.registerTime));
+
+    // 页面切换功能
+    function showPage(pageId) {
+      // 隐藏所有内容页面
+      const contentPages = document.querySelectorAll('.content-page');
+      contentPages.forEach(page => {
+        page.classList.remove('active');
+        page.style.display = 'none';
+      });
+      
+      // 显示目标页面
+      const targetPage = document.getElementById(pageId + '-content');
+      if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'block';
+        targetPage.classList.add('fade-in');
+      }
+      
+      // 更新导航状态
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // 根据页面ID设置对应的导航项为活跃状态
+      const navMap = {
+        'dashboard': 0,
+        'merchants': 1,
+        'merchant-detail': 1,
+        'alerts': 2,
+        'alert-detail': 2,
+        'reports': 3,
+        'system': 4,
+        'logs': 5
+      };
+      
+      const activeIndex = navMap[pageId];
+      if (activeIndex !== undefined) {
+        navItems[activeIndex].classList.add('active');
+      }
+    }
+
+    // 登录处理
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const username = event.target.querySelector('input[type="text"]').value;
+      const password = event.target.querySelector('input[type="password"]').value;
+      
+      if (!username || !password) {
+        alert('请填写完整的登录信息');
+        return;
+      }
+      
+      // 模拟登录成功
+      document.getElementById('login-page').classList.remove('active');
+      document.getElementById('app-page').classList.add('active');
+      
+      showPage('dashboard');
+      document.getElementById('app-page').classList.add('fade-in');
+    }
+
+    // 退出登录
+    function handleLogout() {
+      if (confirm('确定要退出登录吗？')) {
+        document.getElementById('app-page').classList.remove('active');
+        document.getElementById('login-page').classList.add('active');
+        
+        const loginForm = document.querySelector('.login-form');
+        loginForm.reset();
+      }
+    }
+
+    // 显示商户详情
+    function showMerchantDetail(merchantId) {
+      const merchant = merchantsData.find(item => item.id === merchantId);
+      if (!merchant) return;
+
+      // 更新商户基础信息
+      document.getElementById('merchant-detail-id').textContent = merchant.id;
+      document.getElementById('merchant-detail-name').textContent = merchant.name;
+      document.getElementById('merchant-detail-contact').textContent = merchant.contact;
+      document.getElementById('merchant-detail-email').textContent = merchant.email;
+      document.getElementById('merchant-detail-card-count').textContent = merchant.cardCount;
+      document.getElementById('merchant-detail-register-time').textContent = merchant.registerTime;
+      document.getElementById('merchant-detail-last-login').textContent = merchant.lastLogin;
+      
+      // 更新状态显示
+      const statusElement = document.getElementById('merchant-detail-status');
+      statusElement.className = `toggle-switch ${merchant.status === 'enabled' ? 'enabled' : ''}`;
+      statusElement.title = merchant.status === 'enabled' ? '启用' : '停用';
+      statusElement.onclick = () => toggleMerchantStatus(merchant.id, merchant.status);
+
+      // 更新卡片数量
+      document.getElementById('merchant-cards-count').textContent = `共 ${merchant.cardCount} 张卡片`;
+
+      // 渲染卡片列表
+      renderMerchantCards(merchant.cards);
+
+      showPage('merchant-detail');
+    }
+
+    // 渲染商户卡片列表
+    function renderMerchantCards(cards) {
+      const tbody = document.getElementById('merchant-cards-table-body');
+      
+      tbody.innerHTML = cards.map(card => `
+        <tr class="table-row">
+          <td style="font-family: var(--font-family-number);">${card.id}</td>
+          <td>
+            <span class="badge ${card.type === 'V卡' ? 'badge-info' : 'badge-secondary'}">${card.type}</span>
+          </td>
+          <td style="font-family: var(--font-family-number);">${card.cardInfo}</td>
+          <td>${card.description}</td>
+          <td style="font-family: var(--font-family-number);">${card.notificationEmail}</td>
+          <td>${card.authTime}</td>
+          <td>${card.lastUsed}</td>
+          <td>
+            <span class="badge ${getCardStatusClass(card.status)}">${getCardStatusText(card.status)}</span>
+          </td>
+          <td>
+            <div style="display: flex; gap: var(--spacing-xs);">
+              <button class="btn btn-text" onclick="toggleCardStatus('${card.id}', '${card.status}')">${card.status === 'active' ? '停用' : '启用'}</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 获取卡片状态样式类
+    function getCardStatusClass(status) {
+      switch(status) {
+        case 'active': return 'badge-success';
+        case 'inactive': return 'badge-warning';
+        case 'suspended': return 'badge-danger';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 获取卡片状态文本
+    function getCardStatusText(status) {
+      switch(status) {
+        case 'active': return '活跃';
+        case 'inactive': return '未使用';
+        case 'suspended': return '已停用';
+        default: return '未知';
+      }
+    }
+
+    // 切换商户状态
+    function toggleMerchantStatus(merchantId, currentStatus) {
+      const merchant = merchantsData.find(item => item.id === merchantId);
+      if (!merchant) return;
+
+      const newStatus = currentStatus === 'enabled' ? 'disabled' : 'enabled';
+      const newStatusText = newStatus === 'enabled' ? '启用' : '停用';
+      
+      if (confirm(`确定要${newStatusText}客户 ${merchant.name} 吗？`)) {
+        merchant.status = newStatus;
+        
+        // 更新列表页面的拨动开关状态
+        const listToggleElements = document.querySelectorAll(`[onclick*="${merchantId}"]`);
+        listToggleElements.forEach(element => {
+          if (element.classList.contains('toggle-switch')) {
+            element.className = `toggle-switch ${newStatus === 'enabled' ? 'enabled' : ''}`;
+            element.title = newStatusText;
+            element.onclick = () => toggleMerchantStatus(merchantId, newStatus);
+          }
+        });
+        
+        // 如果在详情页面，也更新详情页面的拨动开关
+        const detailStatusElement = document.getElementById('merchant-detail-status');
+        if (detailStatusElement && document.getElementById('merchant-detail-content').classList.contains('active')) {
+          detailStatusElement.className = `toggle-switch ${newStatus === 'enabled' ? 'enabled' : ''}`;
+          detailStatusElement.title = newStatusText;
+          detailStatusElement.onclick = () => toggleMerchantStatus(merchantId, newStatus);
+        }
+      }
+    }
+
+    // 切换卡片状态
+    function toggleCardStatus(cardId, currentStatus) {
+      // 找到对应的商户和卡片
+      let targetMerchant = null;
+      let targetCard = null;
+      
+      for (let merchant of merchantsData) {
+        const card = merchant.cards.find(c => c.id === cardId);
+        if (card) {
+          targetMerchant = merchant;
+          targetCard = card;
+          break;
+        }
+      }
+      
+      if (!targetCard) return;
+
+      const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
+      const newStatusText = newStatus === 'active' ? '启用' : '停用';
+      
+      if (confirm(`确定要${newStatusText}卡片 ${cardId} 吗？`)) {
+        targetCard.status = newStatus;
+        
+        // 重新渲染卡片列表
+        renderMerchantCards(targetMerchant.cards);
+      }
+    }
+
+    // 显示添加商户模态框
+    function showAddMerchantModal() {
+      document.getElementById('add-customer-modal').classList.add('active');
+      // 清空表单
+      document.getElementById('add-customer-form').reset();
+      // 隐藏错误信息
+      document.querySelectorAll('.form-error').forEach(error => error.style.display = 'none');
+    }
+
+    // 显示修改密码模态框
+    function showChangePasswordModal(merchantId) {
+      const merchant = merchantsData.find(item => item.id === merchantId);
+      if (!merchant) return;
+
+      currentMerchantId = merchantId;
+      document.getElementById('change-password-customer-name').textContent = merchant.name;
+      document.getElementById('change-password-customer-id').textContent = merchant.id;
+      
+      document.getElementById('change-password-modal').classList.add('active');
+      // 清空表单
+      document.getElementById('change-password-form').reset();
+      // 隐藏错误信息
+      document.querySelectorAll('.form-error').forEach(error => error.style.display = 'none');
+    }
+
+    // 关闭模态框
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+      currentMerchantId = null;
+    }
+
+    // 邮箱格式验证
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // 显示表单错误
+    function showFieldError(fieldId, errorId, message) {
+      const field = document.getElementById(fieldId);
+      const error = document.getElementById(errorId);
+      field.style.borderColor = 'var(--danger)';
+      error.textContent = message;
+      error.style.display = 'block';
+    }
+
+    // 清除表单错误
+    function clearFieldError(fieldId, errorId) {
+      const field = document.getElementById(fieldId);
+      const error = document.getElementById(errorId);
+      field.style.borderColor = '';
+      error.style.display = 'none';
+    }
+
+    // 添加客户
+    function addCustomer() {
+      const name = document.getElementById('customer-name').value.trim();
+      const email = document.getElementById('customer-email').value.trim();
+      const password = document.getElementById('customer-password').value;
+
+      let hasError = false;
+
+      // 清除之前的错误
+      clearFieldError('customer-name', 'customer-name-error');
+      clearFieldError('customer-email', 'customer-email-error');
+      clearFieldError('customer-password', 'customer-password-error');
+
+      // 验证客户名称
+      if (!name) {
+        showFieldError('customer-name', 'customer-name-error', '请输入客户名称');
+        hasError = true;
+      }
+
+      // 验证邮箱
+      if (!email) {
+        showFieldError('customer-email', 'customer-email-error', '请输入邮箱地址');
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        showFieldError('customer-email', 'customer-email-error', '请输入正确的邮箱格式');
+        hasError = true;
+      } else if (merchantsData.some(m => m.email === email)) {
+        showFieldError('customer-email', 'customer-email-error', '该邮箱已被使用');
+        hasError = true;
+      }
+
+      // 验证密码
+      if (!password) {
+        showFieldError('customer-password', 'customer-password-error', '请输入密码');
+        hasError = true;
+      } else if (password.length < 6) {
+        showFieldError('customer-password', 'customer-password-error', '密码长度至少6位');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // 生成新的客户ID
+      const newId = 'M' + String(Math.max(...merchantsData.map(m => parseInt(m.id.substring(1)))) + 1).padStart(3, '0');
+      
+      // 创建新客户
+      const newCustomer = {
+        id: newId,
+        name: name,
+        contact: '系统管理员',
+        email: email,
+        cardCount: 0,
+        registerTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        lastLogin: '-',
+        status: 'enabled',
+        password: password,
+        cards: []
+      };
+
+      // 添加到数据中
+      merchantsData.unshift(newCustomer);
+      filteredMerchantsData = [...merchantsData];
+
+      // 关闭模态框
+      closeModal('add-customer-modal');
+      
+      // 刷新列表（这里可以添加实际的列表刷新逻辑）
+      alert(`客户 ${name} 添加成功！客户ID：${newId}`);
+    }
+
+    // 修改密码
+    function changePassword() {
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      let hasError = false;
+
+      // 清除之前的错误
+      clearFieldError('new-password', 'new-password-error');
+      clearFieldError('confirm-password', 'confirm-password-error');
+
+      // 验证新密码
+      if (!newPassword) {
+        showFieldError('new-password', 'new-password-error', '请输入新密码');
+        hasError = true;
+      } else if (newPassword.length < 6) {
+        showFieldError('new-password', 'new-password-error', '密码长度至少6位');
+        hasError = true;
+      }
+
+      // 验证确认密码
+      if (!confirmPassword) {
+        showFieldError('confirm-password', 'confirm-password-error', '请确认密码');
+        hasError = true;
+      } else if (newPassword !== confirmPassword) {
+        showFieldError('confirm-password', 'confirm-password-error', '两次输入的密码不一致');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // 更新密码
+      const merchant = merchantsData.find(item => item.id === currentMerchantId);
+      if (merchant) {
+        merchant.password = newPassword;
+        
+        // 关闭模态框
+        closeModal('change-password-modal');
+        
+        alert(`客户 ${merchant.name} 的密码修改成功！`);
+      }
+    }
+
+    // 客户筛选功能
+    function applyCustomerFilters() {
+      const customerName = document.getElementById('filter-customer-name').value.trim().toLowerCase();
+      const customerEmail = document.getElementById('filter-customer-email').value.trim().toLowerCase();
+      const customerStatus = document.getElementById('filter-customer-status').value;
+      const registerStart = document.getElementById('filter-register-start').value;
+      const registerEnd = document.getElementById('filter-register-end').value;
+
+      filteredMerchantsData = merchantsData.filter(customer => {
+        let match = true;
+
+        if (customerName && !customer.name.toLowerCase().includes(customerName)) {
+          match = false;
+        }
+
+        if (customerEmail && !customer.email.toLowerCase().includes(customerEmail)) {
+          match = false;
+        }
+
+        if (customerStatus && customer.status !== customerStatus) {
+          match = false;
+        }
+
+        if (registerStart) {
+          const customerDate = new Date(customer.registerTime);
+          const startDate = new Date(registerStart);
+          if (customerDate < startDate) {
+            match = false;
+          }
+        }
+
+        if (registerEnd) {
+          const customerDate = new Date(customer.registerTime);
+          const endDate = new Date(registerEnd + ' 23:59:59');
+          if (customerDate > endDate) {
+            match = false;
+          }
+        }
+
+        return match;
+      });
+
+      // 这里可以添加实际的列表刷新逻辑
+      console.log('筛选结果：', filteredMerchantsData);
+      alert(`筛选完成，共找到 ${filteredMerchantsData.length} 个客户`);
+    }
+
+    // 重置客户筛选
+    function resetCustomerFilters() {
+      document.getElementById('filter-customer-name').value = '';
+      document.getElementById('filter-customer-email').value = '';
+      document.getElementById('filter-customer-status').value = '';
+      document.getElementById('filter-register-start').value = '';
+      document.getElementById('filter-register-end').value = '';
+      
+      filteredMerchantsData = [...merchantsData];
+      
+      alert('筛选条件已重置');
+    }
+
+    // 预警相关函数
+    // 渲染预警表格
+    function renderAlertsTable() {
+      const tbody = document.getElementById('alerts-table-body');
+      const startIndex = (currentAlertsPage - 1) * alertsPerPage;
+      const endIndex = startIndex + alertsPerPage;
+      const currentData = filteredAlertsData.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = currentData.map(alert => `
+        <tr class="table-row">
+          <td>
+            <input type="checkbox">
+          </td>
+          <td>${alert.receiveTime}</td>
+          <td>
+            <span class="badge ${getDisputeTypeClass(alert.disputeType)}">${alert.disputeType}</span>
+          </td>
+          <td>
+            <span class="badge ${alert.source === 'V卡' ? 'badge-info' : 'badge-secondary'}">${alert.source}</span>
+          </td>
+          <td style="font-family: var(--font-family-number);">${alert.amount}</td>
+          <td>${alert.merchant}</td>
+          <td>${alert.contact}</td>
+          <td>
+            <span class="badge ${getAlertStatusClass(alert.status)}">${alert.status}</span>
+          </td>
+          <td>
+            <button class="btn btn-text" onclick="showAlertDetail(${alert.id})">查看详情</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      // 更新总数显示
+      document.getElementById('alerts-count').textContent = `共 ${filteredAlertsData.length} 条预警`;
+    }
+
+    // 获取争议类型样式类
+    function getDisputeTypeClass(type) {
+      switch(type) {
+        case 'fraud': return 'badge-danger';
+        case 'dispute': return 'badge-warning';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 获取预警状态样式类
+    function getAlertStatusClass(status) {
+      switch(status) {
+        case '待处理': return 'badge-warning';
+        case '处理中': return 'badge-info';
+        case '已处理': return 'badge-success';
+        case '已拒绝': return 'badge-danger';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 显示预警详情
+    function showAlertDetail(alertId) {
+      const alert = alertsData.find(item => item.id === alertId);
+      if (!alert) return;
+
+      // 更新基础信息
+      document.getElementById('detail-alert-id').textContent = alert.alertId;
+      document.getElementById('detail-dispute-type').textContent = alert.disputeType;
+      document.getElementById('detail-dispute-type').className = `badge ${getDisputeTypeClass(alert.disputeType)}`;
+      document.getElementById('detail-status').textContent = alert.status;
+      document.getElementById('detail-status').className = `badge ${getAlertStatusClass(alert.status)}`;
+      document.getElementById('detail-receive-time').textContent = alert.receiveTime;
+      document.getElementById('detail-alert-time').textContent = alert.alertTime;
+      document.getElementById('detail-alert-id-copy').textContent = alert.alertId;
+      document.getElementById('detail-dispute-type-copy').textContent = alert.disputeType;
+      document.getElementById('detail-source').textContent = alert.source;
+      document.getElementById('detail-amount').textContent = alert.amount + ' USD';
+      document.getElementById('detail-merchant').textContent = alert.merchant;
+      document.getElementById('detail-description').textContent = alert.description;
+
+      // 根据预警来源显示不同的详细信息
+      const visaDetails = document.getElementById('visa-details');
+      const mastercardDetails = document.getElementById('mastercard-details');
+      const feedbackViewSection = document.getElementById('feedback-view-section');
+
+      if (alert.source === 'V卡') {
+        // 显示V卡信息
+        visaDetails.style.display = 'block';
+        mastercardDetails.style.display = 'none';
+        feedbackViewSection.style.display = 'none';
+
+        // 填充V卡数据
+        document.getElementById('visa-bin').textContent = alert.cardBin;
+        document.getElementById('visa-caid').textContent = alert.caid;
+        document.getElementById('visa-card-number').textContent = alert.cardNumber;
+        document.getElementById('visa-acquirer-bin').textContent = alert.acquirerBin;
+        document.getElementById('visa-acquirer-ref').textContent = alert.acquirerRef;
+        document.getElementById('visa-auth-code').textContent = alert.authCode;
+        document.getElementById('visa-reason-code').textContent = alert.reasonCode;
+        document.getElementById('visa-contact').textContent = alert.contact;
+        document.getElementById('visa-dispute-amount').textContent = alert.disputeAmount;
+        document.getElementById('visa-mcc').textContent = alert.mcc;
+        document.getElementById('visa-rule-name').textContent = alert.ruleName;
+        document.getElementById('visa-rule-type').textContent = alert.ruleType;
+        document.getElementById('visa-transaction-date').textContent = alert.transactionDate;
+      } else {
+        // 显示M卡信息
+        visaDetails.style.display = 'none';
+        mastercardDetails.style.display = 'block';
+
+        // 填充M卡数据
+        document.getElementById('mc-arn').textContent = alert.arn;
+        document.getElementById('mc-auth-code').textContent = alert.authCode;
+        document.getElementById('mc-bin').textContent = alert.cardBin;
+        document.getElementById('mc-card-number').textContent = alert.cardNumber;
+        document.getElementById('mc-reason-code').textContent = alert.reasonCode;
+        document.getElementById('mc-dispute-amount').textContent = alert.disputeAmount;
+        document.getElementById('mc-initiated-by').textContent = alert.initiatedBy;
+        document.getElementById('mc-issuer-name').textContent = alert.issuerName;
+        document.getElementById('mc-3d-liability').textContent = alert.liability3D;
+        document.getElementById('mc-mcc').textContent = alert.mcc;
+        document.getElementById('mc-transaction-id').textContent = alert.transactionId;
+        document.getElementById('mc-transaction-time').textContent = alert.transactionTime;
+        document.getElementById('mc-transaction-type').textContent = alert.transactionType;
+
+        // 显示客户反馈（如果有的话）
+        if (alert.hasFeedback) {
+          feedbackViewSection.style.display = 'block';
+          document.getElementById('feedback-result').textContent = alert.feedbackResult;
+          document.getElementById('feedback-refund-status').textContent = alert.feedbackRefundStatus;
+          document.getElementById('feedback-is-fraud').textContent = alert.feedbackIsFraud;
+          document.getElementById('feedback-comment').textContent = alert.feedbackComment;
+          document.getElementById('feedback-transaction-ref').textContent = alert.feedbackTransactionRef;
+          document.getElementById('feedback-refund-id').textContent = alert.feedbackRefundId;
+          document.getElementById('feedback-refund-date').textContent = alert.feedbackRefundDate;
+          document.getElementById('feedback-refund-currency').textContent = alert.feedbackRefundCurrency;
+          document.getElementById('feedback-refund-amount').textContent = alert.feedbackRefundAmount;
+        } else {
+          feedbackViewSection.style.display = 'none';
+        }
+      }
+
+      showPage('alert-detail');
+    }
+
+    // 应用预警筛选
+    function applyAlertFilters() {
+      const disputeType = document.getElementById('filter-dispute-type').value;
+      const processStatus = document.getElementById('filter-process-status').value;
+      const merchant = document.getElementById('filter-merchant').value;
+      const receiveStart = document.getElementById('filter-receive-start').value;
+      const receiveEnd = document.getElementById('filter-receive-end').value;
+      
+      filteredAlertsData = alertsData.filter(alert => {
+        let match = true;
+        
+        if (disputeType && alert.disputeType !== disputeType) {
+          match = false;
+        }
+        
+        if (processStatus && alert.status !== processStatus) {
+          match = false;
+        }
+        
+        if (merchant && alert.merchant !== merchant) {
+          match = false;
+        }
+        
+        if (receiveStart) {
+          const alertDate = new Date(alert.receiveTime);
+          const startDate = new Date(receiveStart);
+          if (alertDate < startDate) {
+            match = false;
+          }
+        }
+        
+        if (receiveEnd) {
+          const alertDate = new Date(alert.receiveTime);
+          const endDate = new Date(receiveEnd + ' 23:59:59');
+          if (alertDate > endDate) {
+            match = false;
+          }
+        }
+        
+        return match;
+      });
+      
+      currentAlertsPage = 1;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 重置预警筛选
+    function resetAlertFilters() {
+      document.getElementById('filter-dispute-type').value = '';
+      document.getElementById('filter-process-status').value = '';
+      document.getElementById('filter-merchant').value = '';
+      document.getElementById('filter-receive-start').value = '';
+      document.getElementById('filter-receive-end').value = '';
+      
+      filteredAlertsData = [...alertsData];
+      currentAlertsPage = 1;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 更新预警分页
+    function updateAlertsPagination() {
+      const totalPages = Math.ceil(filteredAlertsData.length / alertsPerPage);
+      const startIndex = (currentAlertsPage - 1) * alertsPerPage;
+      const endIndex = Math.min(startIndex + alertsPerPage, filteredAlertsData.length);
+      
+      // 更新分页信息
+      document.getElementById('alerts-pagination-info').textContent = 
+        `显示 ${filteredAlertsData.length === 0 ? 0 : startIndex + 1}-${endIndex} 条，共 ${filteredAlertsData.length} 条记录`;
+      
+      // 更新按钮状态
+      document.getElementById('alerts-prev-btn').disabled = currentAlertsPage === 1;
+      document.getElementById('alerts-next-btn').disabled = currentAlertsPage === totalPages || totalPages === 0;
+      
+      // 更新页码
+      const pageNumbers = document.getElementById('alerts-page-numbers');
+      pageNumbers.innerHTML = '';
+      
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.style.cssText = `
+          width: 36px; height: 36px; 
+          border: 1px solid ${i === currentAlertsPage ? 'var(--primary-orange)' : 'var(--gray-200)'}; 
+          background: ${i === currentAlertsPage ? 'var(--primary-orange)' : 'var(--bg-primary)'}; 
+          color: ${i === currentAlertsPage ? 'white' : 'inherit'}; 
+          border-radius: var(--border-radius-md); 
+          cursor: pointer;
+        `;
+        pageBtn.onclick = () => goToAlertsPage(i);
+        pageNumbers.appendChild(pageBtn);
+      }
+    }
+
+    // 切换预警页面
+    function changeAlertsPage(direction) {
+      const totalPages = Math.ceil(filteredAlertsData.length / alertsPerPage);
+      const newPage = currentAlertsPage + direction;
+      
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentAlertsPage = newPage;
+        renderAlertsTable();
+        updateAlertsPagination();
+      }
+    }
+
+    // 跳转到指定预警页面
+    function goToAlertsPage(page) {
+      currentAlertsPage = page;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      showPage('dashboard');
+      renderAlertsTable();
+      updateAlertsPagination();
+      
+      // 添加表格行点击效果
+      const tableRows = document.querySelectorAll('.table-row');
+      tableRows.forEach(row => {
+        row.addEventListener('click', function(e) {
+          if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'INPUT') {
+            return;
+          }
+          
+          tableRows.forEach(r => r.style.backgroundColor = '');
+          this.style.backgroundColor = 'var(--primary-orange-pale)';
+        });
+      });
+      
+      // 添加卡片悬停效果
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+          this.style.boxShadow = 'var(--shadow-lg)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = 'var(--shadow-sm)';
+        });
+      });
+
+      // 添加模态框外部点击关闭功能
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            this.classList.remove('active');
+            currentMerchantId = null;
+          }
+        });
+      });
+
+      // 添加ESC键关闭模态框
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+          });
+          currentMerchantId = null;
+        }
+      });
+    });
+
+    // 响应式处理
+    function handleResize() {
+      const isMobile = window.innerWidth <= 768;
+      const sidebar = document.querySelector('.app-sidebar');
+      
+      if (isMobile) {
+        sidebar.style.display = 'none';
+      } else {
+        sidebar.style.display = 'block';
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('load', handleResize);
+  </script>
+</body>
+</html> 

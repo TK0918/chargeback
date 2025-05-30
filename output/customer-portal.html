@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拒付预警管理平台 - 商户门户</title>
+  <style>
+    /* CSS变量定义 */
+    :root {
+      /* 主色调 - 橙色系 */
+      --primary-orange: #FF6B35;
+      --primary-orange-light: #FF8659;
+      --primary-orange-dark: #E55A2B;
+      --primary-orange-pale: #FFF4F0;
+
+      /* 辅助色彩 */
+      --secondary-blue: #2E86C1;
+      --secondary-green: #28B463;
+      --secondary-red: #E74C3C;
+      --secondary-yellow: #F39C12;
+
+      /* 中性色彩 */
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+
+      /* 背景色彩 */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
+
+      /* 状态色彩 */
+      --success: #22C55E;
+      --success-light: #DCFCE7;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --danger: #EF4444;
+      --danger-light: #FEE2E2;
+      --info: #3B82F6;
+      --info-light: #DBEAFE;
+
+      /* 风险等级色彩 */
+      --risk-high: #DC2626;
+      --risk-medium: #F59E0B;
+      --risk-low: #16A34A;
+
+      /* 字体规范 */
+      --font-family-base: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+      --font-family-number: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+      /* 字体大小 */
+      --font-size-h1: 32px;
+      --font-size-h2: 24px;
+      --font-size-h3: 20px;
+      --font-size-h4: 18px;
+      --font-size-h5: 16px;
+      --font-size-base: 14px;
+      --font-size-large: 16px;
+      --font-size-small: 12px;
+      --font-size-xs: 10px;
+
+      /* 间距系统 */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+
+      /* 圆角与阴影 */
+      --border-radius-sm: 4px;
+      --border-radius-md: 6px;
+      --border-radius-lg: 8px;
+      --border-radius-xl: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 全局样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      color: var(--gray-700);
+      background: var(--bg-secondary);
+    }
+
+    /* 通用组件样式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-orange);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-orange-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+    }
+
+    .btn-text {
+      background: transparent;
+      color: var(--primary-orange);
+      padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .btn-block {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--bg-secondary);
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: var(--font-size-h4);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .card-body {
+      padding: var(--spacing-lg);
+    }
+
+    .form-field {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-orange);
+      box-shadow: 0 0 0 3px var(--primary-orange-pale);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      background: white;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-base);
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .badge-info {
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    .badge-secondary {
+      background: var(--gray-200);
+      color: var(--gray-600);
+    }
+
+    .risk-badge {
+      padding: 6px 12px;
+      border-radius: var(--border-radius-md);
+      font-weight: 600;
+      font-size: var(--font-size-small);
+      color: white;
+    }
+
+    .risk-high { background: var(--risk-high); }
+    .risk-medium { background: var(--risk-medium); }
+    .risk-low { background: var(--risk-low); }
+
+    /* 页面容器 */
+    .page {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* 登录页面样式 */
+    .login-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-orange-pale) 0%, var(--bg-primary) 100%);
+    }
+
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-orange);
+      border-radius: var(--border-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .login-title {
+      color: var(--gray-700);
+      font-size: var(--font-size-h2);
+      margin: 0;
+    }
+
+    .login-subtitle {
+      color: var(--gray-500);
+      margin-top: var(--spacing-sm);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-footer {
+      text-align: center;
+      color: var(--gray-500);
+    }
+
+    .login-illustration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      background: var(--primary-orange-pale);
+      position: relative;
+    }
+
+    .illustration-placeholder {
+      width: 300px;
+      height: 300px;
+      background: var(--primary-orange);
+      border-radius: var(--border-radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: var(--font-size-h3);
+      text-align: center;
+    }
+
+    /* 主应用布局 */
+    .app-layout {
+      display: grid;
+      grid-template-areas: 
+        "header header"
+        "sidebar main";
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 64px 1fr;
+      height: 100vh;
+      background: var(--bg-secondary);
+    }
+
+    .app-header {
+      grid-area: header;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 var(--spacing-lg);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left .logo {
+      justify-content: flex-start;
+    }
+
+    .logo-text {
+      font-size: var(--font-size-large);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .app-sidebar {
+      grid-area: sidebar;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--gray-200);
+      padding: var(--spacing-lg) 0;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      padding: 0 var(--spacing-md);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 12px var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .nav-item.active {
+      background: var(--primary-orange-pale);
+      color: var(--primary-orange);
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-main {
+      grid-area: main;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: var(--font-size-h2);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    /* 仪表板样式 */
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--border-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .metric-icon-orange { background: var(--primary-orange-pale); color: var(--primary-orange); }
+    .metric-icon-blue { background: var(--info-light); color: var(--info); }
+    .metric-icon-green { background: var(--success-light); color: var(--success); }
+    .metric-icon-red { background: var(--danger-light); color: var(--danger); }
+
+    .metric-content {
+      flex: 1;
+    }
+
+    .metric-value {
+      font-size: var(--font-size-h2);
+      font-weight: 700;
+      color: var(--gray-700);
+      font-family: var(--font-family-number);
+    }
+
+    .metric-label {
+      font-size: var(--font-size-base);
+      color: var(--gray-500);
+      margin-top: var(--spacing-xs);
+    }
+
+    .metric-change {
+      font-size: var(--font-size-small);
+      font-weight: 600;
+      margin-top: var(--spacing-xs);
+    }
+
+    .metric-change.positive { color: var(--success); }
+    .metric-change.negative { color: var(--danger); }
+
+    /* 卡片管理样式 */
+    .card-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .card-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--gray-200);
+      align-items: center;
+      background: var(--bg-primary);
+    }
+
+    .card-item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    /* 预警列表样式 */
+    .filters-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .filters-left {
+      display: flex;
+      gap: var(--spacing-lg);
+      flex-wrap: wrap;
+    }
+
+    .filters-right {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      min-width: 120px;
+    }
+
+    .filter-group label {
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      color: var(--gray-600);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray-700);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .data-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .table-row:hover {
+      background: var(--bg-secondary);
+    }
+
+    /* 预警详情样式 */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: var(--font-size-base);
+      color: var(--gray-500);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .breadcrumb a {
+      color: var(--primary-orange);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .breadcrumb-separator {
+      color: var(--gray-300);
+    }
+
+    .breadcrumb-current {
+      color: var(--gray-700);
+      font-weight: 500;
+    }
+
+    .alert-summary {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .alert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .alert-title h1 {
+      margin: 0;
+      font-size: var(--font-size-h2);
+      color: var(--gray-700);
+    }
+
+    .alert-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .meta-label {
+      font-size: var(--font-size-small);
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .meta-value {
+      font-size: var(--font-size-base);
+      color: var(--gray-700);
+      font-weight: 600;
+    }
+
+    /* 弹窗样式 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .login-page {
+        grid-template-columns: 1fr;
+      }
+      
+      .login-illustration {
+        display: none;
+      }
+
+      .app-layout {
+        grid-template-areas: 
+          "header"
+          "main";
+        grid-template-columns: 1fr;
+      }
+      
+      .app-sidebar {
+        display: none;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filters-left {
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+    }
+
+    /* 动画效果 */
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 工具类 */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录页面 -->
+  <div id="login-page" class="page active">
+    <div class="login-page">
+      <div class="login-container">
+        <div class="login-header">
+          <div class="logo">
+            <div class="logo-icon">拒</div>
+          </div>
+          <h1 class="login-title">商户门户</h1>
+          <p class="login-subtitle">拒付预警管理平台</p>
+        </div>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+          <div class="form-field">
+            <label class="form-label">登录邮箱</label>
+            <input type="email" class="form-input" placeholder="请输入邮箱地址" required>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">登录密码</label>
+            <input type="password" class="form-input" placeholder="请输入密码" required>
+          </div>
+          
+          <div class="form-options">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox">
+              <span>记住密码</span>
+            </label>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">登录</button>
+        </form>
+      </div>
+      
+      <div class="login-illustration">
+        <div class="illustration-placeholder">
+          专业的拒付<br>预警服务
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主应用页面 -->
+  <div id="app-page" class="page">
+    <div class="app-layout">
+      <!-- 顶部导航栏 -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="logo">
+            <div class="logo-icon" style="width: 32px; height: 32px; font-size: 16px;">拒</div>
+            <span class="logo-text">拒付预警管理平台</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="user-menu">
+            <div class="user-avatar">张</div>
+            <span style="color: var(--gray-700); font-weight: 500;">张三（ABC商户）</span>
+            <button class="btn btn-text" onclick="handleLogout()">退出</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 侧边导航栏 -->
+      <aside class="app-sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" onclick="showPage('cards')">
+            <div class="nav-icon">💳</div>
+            <span>卡片管理</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showPage('alerts')">
+            <div class="nav-icon">⚠️</div>
+            <span>预警中心</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- 主内容区域 -->
+      <main class="app-main">
+        <!-- 卡片管理页面 -->
+        <div id="cards-content" class="content-page active">
+          <div class="page-header">
+            <h1 class="page-title">卡片管理</h1>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="showAddCardModal()">添加卡片</button>
+            </div>
+          </div>
+          
+          <!-- 筛选栏 -->
+          <div class="filters-bar">
+            <div class="filters-left">
+              <div class="filter-group">
+                <label>描述符</label>
+                <input type="text" class="form-input" placeholder="请输入描述符" id="filter-descriptor">
+              </div>
+              
+              <div class="filter-group">
+                <label>创建时间范围</label>
+                <div style="display: flex; gap: var(--spacing-sm);">
+                  <input type="date" class="form-input" id="filter-date-start" style="width: 140px;">
+                  <span style="line-height: 2.5; color: var(--gray-500);">至</span>
+                  <input type="date" class="form-input" id="filter-date-end" style="width: 140px;">
+                </div>
+              </div>
+              
+              <div class="filter-group">
+                <label>状态</label>
+                <select class="form-select" id="filter-status">
+                  <option value="">全部状态</option>
+                  <option value="报备中">报备中</option>
+                  <option value="已报备">已报备</option>
+                  <option value="已关闭">已关闭</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="filters-right">
+              <button class="btn btn-secondary" onclick="resetFilters()">重置</button>
+              <button class="btn btn-primary" onclick="applyFilters()">搜索</button>
+            </div>
+          </div>
+          
+          <!-- 卡片列表 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">已授权卡片</h3>
+            </div>
+            <div class="card-body">
+              <div style="overflow-x: auto;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>描述符</th>
+                      <th>卡片BIN</th>
+                      <th>CAID</th>
+                      <th>状态</th>
+                      <th>创建时间</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cards-table-body">
+                    <!-- 动态生成数据 -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- 分页器 -->
+              <div style="padding: var(--spacing-lg); border-top: 1px solid var(--gray-200); background: var(--bg-secondary);">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="color: var(--gray-600);" id="pagination-info">
+                    显示 1-10 条，共 18 条记录
+                  </div>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                    <button class="btn btn-secondary" id="prev-btn" onclick="changePage(-1)">上一页</button>
+                    <div style="display: flex; gap: var(--spacing-xs);" id="page-numbers">
+                      <!-- 动态生成页码 -->
+                    </div>
+                    <button class="btn btn-secondary" id="next-btn" onclick="changePage(1)">下一页</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预警中心页面 -->
+        <div id="alerts-content" class="content-page">
+          <div class="page-header">
+            <h1 class="page-title">预警中心</h1>
+            <div class="page-actions">
+              <button class="btn btn-primary">导出数据</button>
+            </div>
+          </div>
+          
+          <!-- 筛选栏 -->
+          <div class="filters-bar">
+            <div class="filters-left">
+              <div class="filter-group">
+                <label>接收时间范围</label>
+                <div style="display: flex; gap: var(--spacing-sm);">
+                  <input type="date" class="form-input" id="filter-receive-start" style="width: 140px;">
+                  <span style="line-height: 2.5; color: var(--gray-500);">至</span>
+                  <input type="date" class="form-input" id="filter-receive-end" style="width: 140px;">
+                </div>
+              </div>
+              
+              <div class="filter-group">
+                <label>争议类型</label>
+                <select class="form-select" id="filter-dispute-type">
+                  <option value="">全部类型</option>
+                  <option value="fraud">fraud</option>
+                  <option value="dispute">dispute</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="filters-right">
+              <button class="btn btn-secondary" onclick="resetAlertFilters()">重置</button>
+              <button class="btn btn-primary" onclick="applyAlertFilters()">搜索</button>
+            </div>
+          </div>
+          
+          <!-- 预警列表 -->
+          <div class="card">
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>接收时间</th>
+                    <th>争议类型</th>
+                    <th>预警来源</th>
+                    <th>交易金额</th>
+                    <th>描述</th>
+                    <th>处理状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="alerts-table-body">
+                  <!-- 动态生成数据 -->
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- 分页器 -->
+            <div style="padding: var(--spacing-lg); border-top: 1px solid var(--gray-200); background: var(--bg-secondary);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="color: var(--gray-600);" id="alerts-pagination-info">
+                  显示 1-10 条，共 20 条记录
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                  <button class="btn btn-secondary" id="alerts-prev-btn" onclick="changeAlertsPage(-1)">上一页</button>
+                  <div style="display: flex; gap: var(--spacing-xs);" id="alerts-page-numbers">
+                    <!-- 动态生成页码 -->
+                  </div>
+                  <button class="btn btn-secondary" id="alerts-next-btn" onclick="changeAlertsPage(1)">下一页</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预警详情页面 -->
+        <div id="alert-detail-content" class="content-page">
+          <div class="breadcrumb">
+            <a href="#" onclick="showPage('alerts')">预警中心</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">预警详情</span>
+          </div>
+          
+          <!-- 基础信息 -->
+          <div class="alert-summary">
+            <div class="alert-header">
+              <div class="alert-title">
+                <h1>基础信息</h1>
+                <span style="font-family: var(--font-family-number); font-size: var(--font-size-large); color: var(--gray-500); font-weight: 500;" id="detail-alert-id">CHB_20241201_001</span>
+              </div>
+              <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                <span class="badge" id="detail-dispute-type">非授权交易</span>
+                <span class="badge badge-warning" id="detail-status">待处理</span>
+              </div>
+            </div>
+            
+            <div class="alert-meta">
+              <div class="meta-item">
+                <span class="meta-label">接收时间</span>
+                <span class="meta-value" id="detail-receive-time">2024-12-01 14:30:25</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">预警时间</span>
+                <span class="meta-value" id="detail-alert-time">2024-12-01 14:28:10</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">预警ID</span>
+                <span class="meta-value" id="detail-alert-id-copy">CHB_20241201_001</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">争议类型</span>
+                <span class="meta-value" id="detail-dispute-type-copy">非授权交易</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">预警来源</span>
+                <span class="meta-value" id="detail-source">V卡</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">交易金额</span>
+                <span class="meta-value" id="detail-amount">$1,250.00 USD</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">描述摘要</span>
+                <span class="meta-value" id="detail-description">客户声称未进行此笔交易</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 更多信息 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">更多信息</h3>
+            </div>
+            <div class="card-body">
+              <!-- V卡信息 -->
+              <div id="visa-details" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                  <div class="meta-item">
+                    <span class="meta-label">卡BIN</span>
+                    <span class="meta-value" id="visa-bin">418756</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">CAID</span>
+                    <span class="meta-value" id="visa-caid">CA001234</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">卡号</span>
+                    <span class="meta-value" id="visa-card-number">****1234</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">收单银行BIN</span>
+                    <span class="meta-value" id="visa-acquirer-bin">123456</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">收单银行参考号</span>
+                    <span class="meta-value" id="visa-acquirer-ref">REF123456789</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">授权码</span>
+                    <span class="meta-value" id="visa-auth-code">AUTH123</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">拒付原因代码</span>
+                    <span class="meta-value" id="visa-reason-code">10.4</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">描述联系人</span>
+                    <span class="meta-value" id="visa-contact">John Smith</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">争议金额</span>
+                    <span class="meta-value" id="visa-dispute-amount">$1,250.00</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">商户类别代码</span>
+                    <span class="meta-value" id="visa-mcc">5411</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">规则名称</span>
+                    <span class="meta-value" id="visa-rule-name">非授权交易规则</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">规则类型</span>
+                    <span class="meta-value" id="visa-rule-type">防欺诈</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">交易日期</span>
+                    <span class="meta-value" id="visa-transaction-date">2024-11-30</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- M卡信息 -->
+              <div id="mastercard-details" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                  <div class="meta-item">
+                    <span class="meta-label">ARN</span>
+                    <span class="meta-value" id="mc-arn">12345678901234567890123</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">授权码</span>
+                    <span class="meta-value" id="mc-auth-code">AUTH456</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">卡BIN</span>
+                    <span class="meta-value" id="mc-bin">512345</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">卡号</span>
+                    <span class="meta-value" id="mc-card-number">****5678</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">拒付原因代码</span>
+                    <span class="meta-value" id="mc-reason-code">4837</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">争议金额</span>
+                    <span class="meta-value" id="mc-dispute-amount">$850.00</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Initiated By</span>
+                    <span class="meta-value" id="mc-initiated-by">持卡人</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">发卡机构名称</span>
+                    <span class="meta-value" id="mc-issuer-name">招商银行</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">是否3D责任方</span>
+                    <span class="meta-value" id="mc-3d-liability">否</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">商户类别代码</span>
+                    <span class="meta-value" id="mc-mcc">5999</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">交易ID</span>
+                    <span class="meta-value" id="mc-transaction-id">TXN_987654322</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">交易时间</span>
+                    <span class="meta-value" id="mc-transaction-time">2024-11-30 15:30:20</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">交易类型</span>
+                    <span class="meta-value" id="mc-transaction-type">在线支付</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 反馈模块（仅M卡显示） -->
+          <div class="card" id="feedback-section" style="display: none;">
+            <div class="card-header">
+              <h3 class="card-title">反馈</h3>
+            </div>
+            <div class="card-body">
+              <form onsubmit="handleAlertFeedback(event)" id="feedback-form">
+                <div class="form-field">
+                  <label class="form-label">反馈结果 *</label>
+                  <select class="form-select" name="feedback-result" required>
+                    <option value="stopped" selected>stopped</option>
+                    <option value="partially_stopped">partially_stopped</option>
+                    <option value="previously_cancelled">previously_cancelled</option>
+                    <option value="missed">missed</option>
+                    <option value="notfound">notfound</option>
+                    <option value="account_suspended">account_suspended</option>
+                    <option value="shipper_contacted">shipper_contacted</option>
+                    <option value="other">other</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label">退款状态 *</label>
+                  <div style="display: flex; gap: var(--spacing-md);">
+                    <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                      <input type="radio" name="refund-status" value="refunded" checked onchange="toggleRefundFields(this.value)">
+                      <span>已退款 (refunded)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                      <input type="radio" name="refund-status" value="not_refunded" onchange="toggleRefundFields(this.value)">
+                      <span>未退款 (not_refunded)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label">是否欺诈</label>
+                  <div style="display: flex; gap: var(--spacing-md);">
+                    <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                      <input type="radio" name="is-fraud" value="true">
+                      <span>是</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                      <input type="radio" name="is-fraud" value="false">
+                      <span>否</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label">补充意见</label>
+                  <textarea class="form-textarea" name="additional-comment" placeholder="请输入补充意见..." rows="3" maxlength="50"></textarea>
+                  <small style="color: var(--gray-500);">最多50个字符</small>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label">匹配的流水单号</label>
+                  <input type="text" class="form-input" name="transaction-ref" placeholder="请输入流水单号" maxlength="50">
+                  <small style="color: var(--gray-500);">最多50个字符</small>
+                </div>
+
+                <!-- 退款相关字段 -->
+                <div id="refund-fields">
+                  <div class="form-field">
+                    <label class="form-label">退款单号 *</label>
+                    <input type="text" class="form-input" name="refund-id" placeholder="请输入退款单号" required>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label">退款日期 *</label>
+                    <input type="datetime-local" class="form-input" name="refund-date" required>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label">退款币种 *</label>
+                    <select class="form-select" name="refund-currency" required>
+                      <option value="">请选择币种</option>
+                      <option value="USD">USD - 美元</option>
+                      <option value="EUR">EUR - 欧元</option>
+                      <option value="CNY">CNY - 人民币</option>
+                      <option value="GBP">GBP - 英镑</option>
+                      <option value="JPY">JPY - 日元</option>
+                      <option value="AUD">AUD - 澳元</option>
+                      <option value="CAD">CAD - 加元</option>
+                      <option value="CHF">CHF - 瑞士法郎</option>
+                      <option value="HKD">HKD - 港币</option>
+                      <option value="SGD">SGD - 新加坡元</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label">退款金额 *</label>
+                    <input type="number" class="form-input" name="refund-amount" placeholder="请输入退款金额" step="0.01" min="0" required>
+                    <small style="color: var(--gray-500);">保留两位小数</small>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end; padding-top: var(--spacing-lg); border-top: 1px solid var(--gray-200);">
+                  <button type="button" class="btn btn-secondary" onclick="showPage('alerts')">返回</button>
+                  <button type="submit" class="btn btn-primary">提交反馈</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 添加卡片弹窗 -->
+  <div id="add-card-modal" class="modal">
+    <div class="modal-content">
+      <div class="card-header">
+        <h3 class="card-title">添加授权卡片</h3>
+        <button class="btn btn-text" onclick="hideAddCardModal()">✕</button>
+      </div>
+      <div class="card-body">
+        <form class="card-form" onsubmit="handleAddCard(event)">
+          <div class="form-field">
+            <label class="form-label">商户描述符 *</label>
+            <input type="text" class="form-input" placeholder="请输入描述符" required id="descriptor-input">
+            <small style="color: var(--gray-500);">用于拒付通识别的商户标识</small>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">卡片BIN *</label>
+            <input type="text" class="form-input" placeholder="请输入6-8位卡片BIN" pattern="[0-9]{6,8}" required id="bin-input" oninput="checkCardType(this.value)">
+            <small style="color: var(--gray-500);">银行卡号前6-8位</small>
+          </div>
+          
+          <div class="form-field" id="caid-field" style="display: none;">
+            <label class="form-label">CAID *</label>
+            <input type="text" class="form-input" placeholder="请输入CAID" id="caid-input">
+            <small style="color: var(--gray-500);">Visa卡必填项</small>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">通知邮箱 *</label>
+            <input type="email" class="form-input" placeholder="接收预警通知的邮箱" required id="email-input">
+          </div>
+          
+          <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end;">
+            <button type="button" class="btn btn-secondary" onclick="hideAddCardModal()">取消</button>
+            <button type="submit" class="btn btn-primary">提交报备</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟卡片数据
+    let cardsData = [
+      { id: 1, descriptor: 'ABC-STORE', bin: '418756', caid: 'CA001', cardType: 'V', status: '已报备', createTime: '2024-12-01 14:30:25', email: 'alert@abc.com' },
+      { id: 2, descriptor: 'XYZ-SHOP', bin: '512345', caid: '-', cardType: 'M', status: '报备中', createTime: '2024-12-01 13:15:10', email: 'notify@xyz.com' },
+      { id: 3, descriptor: 'BEST-MALL', bin: '456789', caid: 'CA002', cardType: 'V', status: '已报备', createTime: '2024-11-30 16:45:30', email: 'alerts@best.com' },
+      { id: 4, descriptor: 'TECH-STORE', bin: '378901', caid: '-', cardType: 'M', status: '已关闭', createTime: '2024-11-30 11:20:15', email: 'tech@store.com' },
+      { id: 5, descriptor: 'GAME-WORLD', bin: '123456', caid: 'CA003', cardType: 'V', status: '已报备', createTime: '2024-11-29 09:30:45', email: 'game@world.com' },
+      { id: 6, descriptor: 'FOOD-HUB', bin: '987654', caid: 'CA004', cardType: 'V', status: '报备中', createTime: '2024-11-29 08:15:20', email: 'food@hub.com' },
+      { id: 7, descriptor: 'BOOK-STORE', bin: '345678', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-28 15:40:10', email: 'book@store.com' },
+      { id: 8, descriptor: 'AUTO-PARTS', bin: '567890', caid: 'CA005', cardType: 'V', status: '已关闭', createTime: '2024-11-28 12:25:35', email: 'auto@parts.com' },
+      { id: 9, descriptor: 'MUSIC-SHOP', bin: '234567', caid: 'CA006', cardType: 'V', status: '已报备', createTime: '2024-11-27 17:10:50', email: 'music@shop.com' },
+      { id: 10, descriptor: 'SPORT-GEAR', bin: '876543', caid: 'CA007', cardType: 'V', status: '报备中', createTime: '2024-11-27 14:55:25', email: 'sport@gear.com' },
+      { id: 11, descriptor: 'HOME-DECO', bin: '456123', caid: 'CA008', cardType: 'V', status: '已报备', createTime: '2024-11-26 10:30:15', email: 'home@deco.com' },
+      { id: 12, descriptor: 'PET-CARE', bin: '789012', caid: 'CA009', cardType: 'V', status: '已关闭', createTime: '2024-11-26 08:45:40', email: 'pet@care.com' },
+      { id: 13, descriptor: 'HEALTH-PLUS', bin: '135791', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-25 16:20:30', email: 'health@plus.com' },
+      { id: 14, descriptor: 'BEAUTY-SPA', bin: '246802', caid: 'CA010', cardType: 'V', status: '报备中', createTime: '2024-11-25 13:35:55', email: 'beauty@spa.com' },
+      { id: 15, descriptor: 'TRAVEL-GO', bin: '357913', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-24 11:15:20', email: 'travel@go.com' },
+      { id: 16, descriptor: 'KIDS-TOYS', bin: '468024', caid: 'CA011', cardType: 'V', status: '已关闭', createTime: '2024-11-24 09:50:45', email: 'kids@toys.com' },
+      { id: 17, descriptor: 'OFFICE-SUPPLY', bin: '579135', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-23 15:25:10', email: 'office@supply.com' },
+      { id: 18, descriptor: 'GARDEN-CENTER', bin: '680246', caid: 'CA012', cardType: 'V', status: '报备中', createTime: '2024-11-23 12:40:35', email: 'garden@center.com' }
+    ];
+
+    let filteredData = [...cardsData];
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    // 模拟预警数据
+    let alertsData = [
+      {
+        id: 1,
+        alertId: 'CHB_20241201_001',
+        receiveTime: '2024-12-01 14:30:25',
+        alertTime: '2024-12-01 14:28:10',
+        disputeType: 'fraud',
+        source: 'V卡',
+        amount: '1250.00 USD',
+        description: '客户声称未进行此笔交易',
+        status: '待处理',
+        // V卡特有字段
+        cardBin: '418756',
+        caid: 'CA001234',
+        cardNumber: '****1234',
+        acquirerBin: '123456',
+        acquirerRef: 'REF123456789',
+        authCode: 'AUTH123',
+        reasonCode: '10.4',
+        contact: 'John Smith',
+        disputeAmount: '1250.00 USD',
+        mcc: '5411',
+        ruleName: '非授权交易规则',
+        ruleType: '防欺诈',
+        transactionDate: '2024-11-30'
+      },
+      {
+        id: 2,
+        alertId: 'CHB_20241201_002',
+        receiveTime: '2024-12-01 13:45:10',
+        alertTime: '2024-12-01 13:42:55',
+        disputeType: 'dispute',
+        source: 'M卡',
+        amount: '850.00 USD',
+        description: '发现重复的交易处理',
+        status: '处理中',
+        // M卡特有字段
+        arn: '12345678901234567890123',
+        authCode: 'AUTH456',
+        cardBin: '512345',
+        cardNumber: '****5678',
+        reasonCode: '4837',
+        disputeAmount: '850.00 USD',
+        initiatedBy: '持卡人',
+        issuerName: '招商银行',
+        liability3D: '否',
+        mcc: '5999',
+        transactionId: 'TXN_987654322',
+        transactionTime: '2024-11-30 15:30:20',
+        transactionType: '在线支付'
+      },
+      {
+        id: 3,
+        alertId: 'CHB_20241130_003',
+        receiveTime: '2024-11-30 16:20:30',
+        alertTime: '2024-11-30 16:18:45',
+        disputeType: 'dispute',
+        source: 'V卡',
+        amount: '320.00 USD',
+        description: '客户对商品质量有异议',
+        status: '已处理',
+        cardBin: '456789',
+        caid: 'CA005678',
+        cardNumber: '****9876',
+        acquirerBin: '654321',
+        acquirerRef: 'REF987654321',
+        authCode: 'AUTH789',
+        reasonCode: '13.1',
+        contact: 'Alice Johnson',
+        disputeAmount: '320.00 USD',
+        mcc: '5732',
+        ruleName: '商品质量规则',
+        ruleType: '消费者保护',
+        transactionDate: '2024-11-28'
+      },
+      {
+        id: 4,
+        alertId: 'CHB_20241130_004',
+        receiveTime: '2024-11-30 11:15:20',
+        alertTime: '2024-11-30 11:12:35',
+        disputeType: 'fraud',
+        source: 'M卡',
+        amount: '1500.00 USD',
+        description: '交易处理过程中出现错误',
+        status: '已拒绝',
+        arn: '98765432109876543210987',
+        authCode: 'AUTH321',
+        cardBin: '378901',
+        cardNumber: '****4321',
+        reasonCode: '4855',
+        disputeAmount: '1500.00 USD',
+        initiatedBy: '商户',
+        issuerName: '工商银行',
+        liability3D: '是',
+        mcc: '5812',
+        transactionId: 'TXN_456789123',
+        transactionTime: '2024-11-29 10:45:15',
+        transactionType: '移动支付'
+      },
+      {
+        id: 5,
+        alertId: 'CHB_20241129_005',
+        receiveTime: '2024-11-29 09:30:45',
+        alertTime: '2024-11-29 09:28:20',
+        disputeType: 'fraud',
+        source: 'V卡',
+        amount: '2100.00 USD',
+        description: '疑似欺诈性交易活动',
+        status: '待处理',
+        cardBin: '123456',
+        caid: 'CA009876',
+        cardNumber: '****5555',
+        acquirerBin: '789012',
+        acquirerRef: 'REF555666777',
+        authCode: 'AUTH555',
+        reasonCode: '10.5',
+        contact: 'Bob Wilson',
+        disputeAmount: '2100.00 USD',
+        mcc: '5499',
+        ruleName: '欺诈检测规则',
+        ruleType: '风险控制',
+        transactionDate: '2024-11-27'
+      }
+    ];
+
+    let filteredAlertsData = [...alertsData];
+    let currentAlertsPage = 1;
+    let alertsPerPage = 10;
+
+    // 页面切换功能
+    function showPage(pageId) {
+      // 隐藏所有内容页面
+      const contentPages = document.querySelectorAll('.content-page');
+      contentPages.forEach(page => {
+        page.classList.remove('active');
+        page.style.display = 'none';
+      });
+      
+      // 显示目标页面
+      const targetPage = document.getElementById(pageId + '-content');
+      if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'block';
+        targetPage.classList.add('fade-in');
+      }
+      
+      // 更新导航状态
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // 根据页面ID设置对应的导航项为活跃状态
+      const navMap = {
+        'cards': 0,
+        'alerts': 1,
+        'alert-detail': 1
+      };
+      
+      const activeIndex = navMap[pageId];
+      if (activeIndex !== undefined) {
+        navItems[activeIndex].classList.add('active');
+      }
+    }
+
+    // 登录处理
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = event.target.querySelector('input[type="email"]').value.trim();
+      const password = event.target.querySelector('input[type="password"]').value;
+      
+      // 邮箱验证
+      if (!email) {
+        alert('请输入邮箱');
+        return;
+      }
+      
+      // 密码验证
+      if (!password) {
+        alert('请输入密码');
+        return;
+      }
+      
+      // 模拟数据库验证
+      const validEmails = ['admin@example.com', 'merchant@abc.com', 'test@test.com'];
+      const validCredentials = {
+        'admin@example.com': '123456',
+        'merchant@abc.com': 'password',
+        'test@test.com': '123456'
+      };
+      
+      // 检查邮箱是否存在
+      if (!validEmails.includes(email)) {
+        alert('邮箱不存在');
+        return;
+      }
+      
+      // 检查密码是否正确
+      if (validCredentials[email] !== password) {
+        alert('密码错误');
+        return;
+      }
+      
+      // 登录成功
+      document.getElementById('login-page').classList.remove('active');
+      document.getElementById('app-page').classList.add('active');
+      
+      showPage('cards');
+      document.getElementById('app-page').classList.add('fade-in');
+    }
+
+    // 退出登录
+    function handleLogout() {
+      if (confirm('确定要退出登录吗？')) {
+        document.getElementById('app-page').classList.remove('active');
+        document.getElementById('login-page').classList.add('active');
+        
+        const loginForm = document.querySelector('.login-form');
+        loginForm.reset();
+      }
+    }
+
+    // 显示添加卡片弹窗
+    function showAddCardModal() {
+      document.getElementById('add-card-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 隐藏添加卡片弹窗
+    function hideAddCardModal() {
+      document.getElementById('add-card-modal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+      
+      // 重置表单
+      const form = document.querySelector('#add-card-modal form');
+      form.reset();
+      document.getElementById('caid-field').style.display = 'none';
+      document.getElementById('caid-input').required = false;
+    }
+
+    // 检查卡类型
+    function checkCardType(bin) {
+      const caidField = document.getElementById('caid-field');
+      const caidInput = document.getElementById('caid-input');
+      
+      if (bin.length >= 6) {
+        const sixthDigit = parseInt(bin.charAt(5));
+        
+        if (sixthDigit % 2 === 0) {
+          // 双数是V卡，需要CAID
+          caidField.style.display = 'block';
+          caidInput.required = true;
+        } else {
+          // 单数是M卡，不需要CAID
+          caidField.style.display = 'none';
+          caidInput.required = false;
+          caidInput.value = '';
+        }
+      } else {
+        caidField.style.display = 'none';
+        caidInput.required = false;
+      }
+    }
+
+    // 处理添加卡片
+    function handleAddCard(event) {
+      event.preventDefault();
+      
+      const descriptor = document.getElementById('descriptor-input').value.trim();
+      const bin = document.getElementById('bin-input').value.trim();
+      const caid = document.getElementById('caid-input').value.trim();
+      const email = document.getElementById('email-input').value.trim();
+      
+      if (!descriptor) {
+        alert('请填写商户描述符');
+        return;
+      }
+      
+      if (!bin) {
+        alert('请填写卡片BIN');
+        return;
+      }
+      
+      if (!email) {
+        alert('请填写通知邮箱');
+        return;
+      }
+      
+      // 检查是否是V卡且需要CAID
+      const sixthDigit = parseInt(bin.charAt(5));
+      if (sixthDigit % 2 === 0 && !caid) {
+        alert('Visa卡需要填写CAID');
+        return;
+      }
+      
+      // 添加新卡片
+      const newCard = {
+        id: cardsData.length + 1,
+        descriptor: descriptor,
+        bin: bin,
+        caid: sixthDigit % 2 === 0 ? caid : '-',
+        cardType: sixthDigit % 2 === 0 ? 'V' : 'M',
+        status: '报备中',
+        createTime: new Date().toLocaleString('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }).replace(/\//g, '-'),
+        email: email
+      };
+      
+      cardsData.unshift(newCard); // 添加到数组开头
+      filteredData = [...cardsData];
+      
+      alert('卡片报备提交成功！');
+      hideAddCardModal();
+      renderTable();
+      updatePagination();
+    }
+
+    // 渲染表格
+    function renderTable() {
+      const tbody = document.getElementById('cards-table-body');
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const currentData = filteredData.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = currentData.map(card => `
+        <tr class="table-row">
+          <td>${card.descriptor}</td>
+          <td style="font-family: var(--font-family-number);">${card.bin}</td>
+          <td>${card.caid}</td>
+          <td>
+            <span class="badge ${getStatusClass(card.status)}">${card.status}</span>
+          </td>
+          <td>${card.createTime}</td>
+          <td>
+            ${card.status === '已报备' ? 
+              `<button class="btn btn-text" style="color: var(--danger);" onclick="closeCard(${card.id})">关闭</button>` :
+              '<span style="color: var(--gray-400);">-</span>'
+            }
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 获取状态样式类
+    function getStatusClass(status) {
+      switch(status) {
+        case '已报备': return 'badge-success';
+        case '报备中': return 'badge-warning';
+        case '已关闭': return 'badge-danger';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 关闭卡片
+    function closeCard(cardId) {
+      if (confirm('确定要关闭这张卡片吗？')) {
+        const cardIndex = cardsData.findIndex(card => card.id === cardId);
+        if (cardIndex !== -1) {
+          cardsData[cardIndex].status = '已关闭';
+          applyFilters();
+          alert('卡片已关闭');
+        }
+      }
+    }
+
+    // 应用筛选
+    function applyFilters() {
+      const descriptor = document.getElementById('filter-descriptor').value.trim().toLowerCase();
+      const dateStart = document.getElementById('filter-date-start').value;
+      const dateEnd = document.getElementById('filter-date-end').value;
+      const status = document.getElementById('filter-status').value;
+      
+      filteredData = cardsData.filter(card => {
+        let match = true;
+        
+        if (descriptor && !card.descriptor.toLowerCase().includes(descriptor)) {
+          match = false;
+        }
+        
+        if (dateStart) {
+          const cardDate = new Date(card.createTime);
+          const startDate = new Date(dateStart);
+          if (cardDate < startDate) {
+            match = false;
+          }
+        }
+        
+        if (dateEnd) {
+          const cardDate = new Date(card.createTime);
+          const endDate = new Date(dateEnd + ' 23:59:59');
+          if (cardDate > endDate) {
+            match = false;
+          }
+        }
+        
+        if (status && card.status !== status) {
+          match = false;
+        }
+        
+        return match;
+      });
+      
+      currentPage = 1;
+      renderTable();
+      updatePagination();
+    }
+
+    // 重置筛选
+    function resetFilters() {
+      document.getElementById('filter-descriptor').value = '';
+      document.getElementById('filter-date-start').value = '';
+      document.getElementById('filter-date-end').value = '';
+      document.getElementById('filter-status').value = '';
+      
+      filteredData = [...cardsData];
+      currentPage = 1;
+      renderTable();
+      updatePagination();
+    }
+
+    // 更新分页
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, filteredData.length);
+      
+      // 更新分页信息
+      document.getElementById('pagination-info').textContent = 
+        `显示 ${startIndex + 1}-${endIndex} 条，共 ${filteredData.length} 条记录`;
+      
+      // 更新按钮状态
+      document.getElementById('prev-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage === totalPages;
+      
+      // 更新页码
+      const pageNumbers = document.getElementById('page-numbers');
+      pageNumbers.innerHTML = '';
+      
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.style.cssText = `
+          width: 36px; height: 36px; 
+          border: 1px solid ${i === currentPage ? 'var(--primary-orange)' : 'var(--gray-200)'}; 
+          background: ${i === currentPage ? 'var(--primary-orange)' : 'var(--bg-primary)'}; 
+          color: ${i === currentPage ? 'white' : 'inherit'}; 
+          border-radius: var(--border-radius-md); 
+          cursor: pointer;
+        `;
+        pageBtn.onclick = () => goToPage(i);
+        pageNumbers.appendChild(pageBtn);
+      }
+    }
+
+    // 切换页面
+    function changePage(direction) {
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+      const newPage = currentPage + direction;
+      
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderTable();
+        updatePagination();
+      }
+    }
+
+    // 跳转到指定页面
+    function goToPage(page) {
+      currentPage = page;
+      renderTable();
+      updatePagination();
+    }
+
+    // 处理预警
+    function handleProcessAlert(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const action = formData.get('action');
+      const reason = event.target.querySelector('textarea').value;
+      
+      if (!action) {
+        alert('请选择处理动作');
+        return;
+      }
+      
+      if (!reason.trim()) {
+        alert('请填写处理原因');
+        return;
+      }
+      
+      alert('预警处理提交成功！');
+      showPage('alerts');
+    }
+
+    // 点击弹窗外部关闭弹窗
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('add-card-modal');
+      if (e.target === modal) {
+        hideAddCardModal();
+      }
+    });
+
+    // ESC键关闭弹窗
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        hideAddCardModal();
+      }
+    });
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      showPage('cards');
+      renderTable();
+      updatePagination();
+      renderAlertsTable();
+      updateAlertsPagination();
+      
+      // 添加表格行点击效果
+      const tableRows = document.querySelectorAll('.table-row');
+      tableRows.forEach(row => {
+        row.addEventListener('click', function(e) {
+          if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+            return;
+          }
+          
+          tableRows.forEach(r => r.style.backgroundColor = '');
+          this.style.backgroundColor = 'var(--primary-orange-pale)';
+        });
+      });
+      
+      // 添加卡片悬停效果
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+          this.style.boxShadow = 'var(--shadow-lg)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = 'var(--shadow-sm)';
+        });
+      });
+    });
+
+    // 响应式处理
+    function handleResize() {
+      const isMobile = window.innerWidth <= 768;
+      const sidebar = document.querySelector('.app-sidebar');
+      
+      if (isMobile) {
+        sidebar.style.display = 'none';
+      } else {
+        sidebar.style.display = 'block';
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('load', handleResize);
+
+    // 预警相关函数
+    // 渲染预警表格
+    function renderAlertsTable() {
+      const tbody = document.getElementById('alerts-table-body');
+      const startIndex = (currentAlertsPage - 1) * alertsPerPage;
+      const endIndex = startIndex + alertsPerPage;
+      const currentData = filteredAlertsData.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = currentData.map(alert => `
+        <tr class="table-row">
+          <td>${alert.receiveTime}</td>
+          <td>
+            <span class="badge ${getDisputeTypeClass(alert.disputeType)}">${alert.disputeType}</span>
+          </td>
+          <td>
+            <span class="badge ${alert.source === 'V卡' ? 'badge-info' : 'badge-secondary'}">${alert.source}</span>
+          </td>
+          <td style="font-family: var(--font-family-number);">${alert.amount}</td>
+          <td>${alert.description}</td>
+          <td>
+            <span class="badge ${getAlertStatusClass(alert.status)}">${alert.status}</span>
+          </td>
+          <td>
+            <button class="btn btn-text" onclick="showAlertDetail(${alert.id})">查看详情</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 获取争议类型样式类
+    function getDisputeTypeClass(type) {
+      switch(type) {
+        case 'fraud': return 'badge-danger';
+        case 'dispute': return 'badge-warning';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 获取预警状态样式类
+    function getAlertStatusClass(status) {
+      switch(status) {
+        case '待处理': return 'badge-warning';
+        case '处理中': return 'badge-info';
+        case '已处理': return 'badge-success';
+        case '已拒绝': return 'badge-danger';
+        default: return 'badge-secondary';
+      }
+    }
+
+    // 显示预警详情
+    function showAlertDetail(alertId) {
+      const alert = alertsData.find(item => item.id === alertId);
+      if (!alert) return;
+
+      // 更新基础信息
+      document.getElementById('detail-alert-id').textContent = alert.alertId;
+      document.getElementById('detail-dispute-type').textContent = alert.disputeType;
+      document.getElementById('detail-dispute-type').className = `badge ${getDisputeTypeClass(alert.disputeType)}`;
+      document.getElementById('detail-status').textContent = alert.status;
+      document.getElementById('detail-status').className = `badge ${getAlertStatusClass(alert.status)}`;
+      document.getElementById('detail-receive-time').textContent = alert.receiveTime;
+      document.getElementById('detail-alert-time').textContent = alert.alertTime;
+      document.getElementById('detail-alert-id-copy').textContent = alert.alertId;
+      document.getElementById('detail-dispute-type-copy').textContent = alert.disputeType;
+      document.getElementById('detail-source').textContent = alert.source;
+      document.getElementById('detail-amount').textContent = alert.amount;
+      document.getElementById('detail-description').textContent = alert.description;
+
+      // 根据预警来源显示不同的详细信息
+      const visaDetails = document.getElementById('visa-details');
+      const mastercardDetails = document.getElementById('mastercard-details');
+      const feedbackSection = document.getElementById('feedback-section');
+
+      if (alert.source === 'V卡') {
+        // 显示V卡信息
+        visaDetails.style.display = 'block';
+        mastercardDetails.style.display = 'none';
+        feedbackSection.style.display = 'none';
+
+        // 填充V卡数据
+        document.getElementById('visa-bin').textContent = alert.cardBin;
+        document.getElementById('visa-caid').textContent = alert.caid;
+        document.getElementById('visa-card-number').textContent = alert.cardNumber;
+        document.getElementById('visa-acquirer-bin').textContent = alert.acquirerBin;
+        document.getElementById('visa-acquirer-ref').textContent = alert.acquirerRef;
+        document.getElementById('visa-auth-code').textContent = alert.authCode;
+        document.getElementById('visa-reason-code').textContent = alert.reasonCode;
+        document.getElementById('visa-contact').textContent = alert.contact;
+        document.getElementById('visa-dispute-amount').textContent = alert.disputeAmount;
+        document.getElementById('visa-mcc').textContent = alert.mcc;
+        document.getElementById('visa-rule-name').textContent = alert.ruleName;
+        document.getElementById('visa-rule-type').textContent = alert.ruleType;
+        document.getElementById('visa-transaction-date').textContent = alert.transactionDate;
+      } else {
+        // 显示M卡信息
+        visaDetails.style.display = 'none';
+        mastercardDetails.style.display = 'block';
+        feedbackSection.style.display = 'block';
+
+        // 填充M卡数据
+        document.getElementById('mc-arn').textContent = alert.arn;
+        document.getElementById('mc-auth-code').textContent = alert.authCode;
+        document.getElementById('mc-bin').textContent = alert.cardBin;
+        document.getElementById('mc-card-number').textContent = alert.cardNumber;
+        document.getElementById('mc-reason-code').textContent = alert.reasonCode;
+        document.getElementById('mc-dispute-amount').textContent = alert.disputeAmount;
+        document.getElementById('mc-initiated-by').textContent = alert.initiatedBy;
+        document.getElementById('mc-issuer-name').textContent = alert.issuerName;
+        document.getElementById('mc-3d-liability').textContent = alert.liability3D;
+        document.getElementById('mc-mcc').textContent = alert.mcc;
+        document.getElementById('mc-transaction-id').textContent = alert.transactionId;
+        document.getElementById('mc-transaction-time').textContent = alert.transactionTime;
+        document.getElementById('mc-transaction-type').textContent = alert.transactionType;
+      }
+
+      showPage('alert-detail');
+    }
+
+    // 应用预警筛选
+    function applyAlertFilters() {
+      const disputeType = document.getElementById('filter-dispute-type').value;
+      const processStatus = document.getElementById('filter-process-status').value;
+      const receiveStart = document.getElementById('filter-receive-start').value;
+      const receiveEnd = document.getElementById('filter-receive-end').value;
+      
+      filteredAlertsData = alertsData.filter(alert => {
+        let match = true;
+        
+        if (disputeType && alert.disputeType !== disputeType) {
+          match = false;
+        }
+        
+        if (processStatus && alert.status !== processStatus) {
+          match = false;
+        }
+        
+        if (receiveStart) {
+          const alertDate = new Date(alert.receiveTime);
+          const startDate = new Date(receiveStart);
+          if (alertDate < startDate) {
+            match = false;
+          }
+        }
+        
+        if (receiveEnd) {
+          const alertDate = new Date(alert.receiveTime);
+          const endDate = new Date(receiveEnd + ' 23:59:59');
+          if (alertDate > endDate) {
+            match = false;
+          }
+        }
+        
+        return match;
+      });
+      
+      currentAlertsPage = 1;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 重置预警筛选
+    function resetAlertFilters() {
+      document.getElementById('filter-dispute-type').value = '';
+      document.getElementById('filter-process-status').value = '';
+      document.getElementById('filter-receive-start').value = '';
+      document.getElementById('filter-receive-end').value = '';
+      
+      filteredAlertsData = [...alertsData];
+      currentAlertsPage = 1;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 更新预警分页
+    function updateAlertsPagination() {
+      const totalPages = Math.ceil(filteredAlertsData.length / alertsPerPage);
+      const startIndex = (currentAlertsPage - 1) * alertsPerPage;
+      const endIndex = Math.min(startIndex + alertsPerPage, filteredAlertsData.length);
+      
+      // 更新分页信息
+      document.getElementById('alerts-pagination-info').textContent = 
+        `显示 ${startIndex + 1}-${endIndex} 条，共 ${filteredAlertsData.length} 条记录`;
+      
+      // 更新按钮状态
+      document.getElementById('alerts-prev-btn').disabled = currentAlertsPage === 1;
+      document.getElementById('alerts-next-btn').disabled = currentAlertsPage === totalPages || totalPages === 0;
+      
+      // 更新页码
+      const pageNumbers = document.getElementById('alerts-page-numbers');
+      pageNumbers.innerHTML = '';
+      
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.style.cssText = `
+          width: 36px; height: 36px; 
+          border: 1px solid ${i === currentAlertsPage ? 'var(--primary-orange)' : 'var(--gray-200)'}; 
+          background: ${i === currentAlertsPage ? 'var(--primary-orange)' : 'var(--bg-primary)'}; 
+          color: ${i === currentAlertsPage ? 'white' : 'inherit'}; 
+          border-radius: var(--border-radius-md); 
+          cursor: pointer;
+        `;
+        pageBtn.onclick = () => goToAlertsPage(i);
+        pageNumbers.appendChild(pageBtn);
+      }
+    }
+
+    // 切换预警页面
+    function changeAlertsPage(direction) {
+      const totalPages = Math.ceil(filteredAlertsData.length / alertsPerPage);
+      const newPage = currentAlertsPage + direction;
+      
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentAlertsPage = newPage;
+        renderAlertsTable();
+        updateAlertsPagination();
+      }
+    }
+
+    // 跳转到指定预警页面
+    function goToAlertsPage(page) {
+      currentAlertsPage = page;
+      renderAlertsTable();
+      updateAlertsPagination();
+    }
+
+    // 处理预警反馈
+    function handleAlertFeedback(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const feedbackResult = formData.get('feedback-result');
+      const refundStatus = formData.get('refund-status');
+      const isFraud = formData.get('is-fraud');
+      const additionalComment = formData.get('additional-comment');
+      const transactionRef = formData.get('transaction-ref');
+      
+      // 验证必填字段
+      if (!feedbackResult) {
+        alert('请选择反馈结果');
+        return;
+      }
+      
+      if (!refundStatus) {
+        alert('请选择退款状态');
+        return;
+      }
+      
+      // 如果选择已退款，验证退款相关字段
+      if (refundStatus === 'refunded') {
+        const refundId = formData.get('refund-id');
+        const refundDate = formData.get('refund-date');
+        const refundCurrency = formData.get('refund-currency');
+        const refundAmount = formData.get('refund-amount');
+        
+        if (!refundId || !refundId.trim()) {
+          alert('请输入退款单号');
+          return;
+        }
+        
+        if (!refundDate) {
+          alert('请选择退款日期');
+          return;
+        }
+        
+        if (!refundCurrency) {
+          alert('请选择退款币种');
+          return;
+        }
+        
+        if (!refundAmount || parseFloat(refundAmount) <= 0) {
+          alert('请输入有效的退款金额');
+          return;
+        }
+      }
+      
+      // 验证字符长度限制
+      if (additionalComment && additionalComment.length > 50) {
+        alert('补充意见不能超过50个字符');
+        return;
+      }
+      
+      if (transactionRef && transactionRef.length > 50) {
+        alert('流水单号不能超过50个字符');
+        return;
+      }
+      
+      // 提交成功后禁用表单
+      const form = document.getElementById('feedback-form');
+      const formElements = form.querySelectorAll('input, select, textarea, button');
+      formElements.forEach(element => {
+        element.disabled = true;
+      });
+      
+      // 添加提交成功标识
+      const cardHeader = form.closest('.card').querySelector('.card-header');
+      cardHeader.innerHTML = '<h3 class="card-title">反馈 <span class="badge badge-success">已提交</span></h3>';
+      
+      alert('预警反馈提交成功！');
+      showPage('alerts');
+    }
+
+    // 控制退款字段显示隐藏
+    function toggleRefundFields(status) {
+      const refundFields = document.getElementById('refund-fields');
+      const refundInputs = refundFields.querySelectorAll('input, select');
+      
+      if (status === 'refunded') {
+        refundFields.style.display = 'block';
+        refundInputs.forEach(input => {
+          input.required = true;
+        });
+      } else {
+        refundFields.style.display = 'none';
+        refundInputs.forEach(input => {
+          input.required = false;
+          input.value = '';
+        });
+      }
+    }
+  </script>
+</body>
+</html> 
