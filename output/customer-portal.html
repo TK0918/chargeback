@@ -876,9 +876,9 @@
       <!-- 侧边导航栏 -->
       <aside class="app-sidebar">
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active" onclick="showPage('cards')">
-            <div class="nav-icon">💳</div>
-            <span>卡片管理</span>
+          <a href="#" class="nav-item active" onclick="showPage('descriptors')">
+            <div class="nav-icon">🏷️</div>
+            <span>Descriptor管理</span>
           </a>
           <a href="#" class="nav-item" onclick="showPage('alerts')">
             <div class="nav-icon">⚠️</div>
@@ -889,12 +889,12 @@
 
       <!-- 主内容区域 -->
       <main class="app-main">
-        <!-- 卡片管理页面 -->
-        <div id="cards-content" class="content-page active">
+        <!-- Descriptor管理页面 -->
+        <div id="descriptors-content" class="content-page active">
           <div class="page-header">
-            <h1 class="page-title">卡片管理</h1>
+            <h1 class="page-title">Descriptor管理</h1>
             <div class="page-actions">
-              <button class="btn btn-primary" onclick="showAddCardModal()">添加卡片</button>
+              <button class="btn btn-primary" onclick="showAddDescriptorModal()">添加Descriptor</button>
             </div>
           </div>
           
@@ -902,8 +902,17 @@
           <div class="filters-bar">
             <div class="filters-left">
               <div class="filter-group">
-                <label>描述符</label>
-                <input type="text" class="form-input" placeholder="请输入描述符" id="filter-descriptor">
+                <label>预警类型</label>
+                <select class="form-select" id="filter-alert-type">
+                  <option value="">全部类型</option>
+                  <option value="ETHOCA">ETHOCA</option>
+                  <option value="RDR">RDR</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label>Descriptor</label>
+                <input type="text" class="form-input" placeholder="请输入Descriptor" id="filter-descriptor">
               </div>
               
               <div class="filter-group">
@@ -932,25 +941,26 @@
             </div>
           </div>
           
-          <!-- 卡片列表 -->
+          <!-- Descriptor列表 -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">已授权卡片</h3>
+              <h3 class="card-title">已授权Descriptor</h3>
             </div>
             <div class="card-body">
               <div style="overflow-x: auto;">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>描述符</th>
-                      <th>卡片BIN</th>
+                      <th>预警类型</th>
+                      <th>Descriptor</th>
+                      <th>BIN</th>
                       <th>CAID</th>
                       <th>状态</th>
                       <th>创建时间</th>
                       <th>操作</th>
                     </tr>
                   </thead>
-                  <tbody id="cards-table-body">
+                  <tbody id="descriptors-table-body">
                     <!-- 动态生成数据 -->
                   </tbody>
                 </table>
@@ -1337,31 +1347,41 @@
     </div>
   </div>
 
-  <!-- 添加卡片弹窗 -->
-  <div id="add-card-modal" class="modal">
+  <!-- 添加Descriptor弹窗 -->
+  <div id="add-descriptor-modal" class="modal">
     <div class="modal-content">
       <div class="card-header">
-        <h3 class="card-title">添加授权卡片</h3>
-        <button class="btn btn-text" onclick="hideAddCardModal()">✕</button>
+        <h3 class="card-title">添加Descriptor</h3>
+        <button class="btn btn-text" onclick="hideAddDescriptorModal()">✕</button>
       </div>
       <div class="card-body">
-        <form class="card-form" onsubmit="handleAddCard(event)">
+        <form class="card-form" onsubmit="handleAddDescriptor(event)">
           <div class="form-field">
-            <label class="form-label">商户描述符 *</label>
-            <input type="text" class="form-input" placeholder="请输入描述符" required id="descriptor-input">
-            <small style="color: var(--gray-500);">用于拒付通识别的商户标识</small>
+            <label class="form-label">预警类型 *</label>
+            <select class="form-select" id="alert-type-select" onchange="toggleAlertTypeFields()" required>
+              <option value="">请选择预警类型</option>
+              <option value="ETHOCA">ETHOCA</option>
+              <option value="RDR">RDR</option>
+            </select>
+            <small style="color: var(--gray-500);">选择预警服务类型</small>
           </div>
           
           <div class="form-field">
-            <label class="form-label">卡片BIN *</label>
-            <input type="text" class="form-input" placeholder="请输入6-8位卡片BIN" pattern="[0-9]{6,8}" required id="bin-input" oninput="checkCardType(this.value)">
-            <small style="color: var(--gray-500);">银行卡号前6-8位</small>
+            <label class="form-label">Descriptor *</label>
+            <input type="text" class="form-input" placeholder="请输入Descriptor" required id="descriptor-input">
+            <small style="color: var(--gray-500);">用于预警服务识别的商户标识</small>
+          </div>
+          
+          <div class="form-field" id="bin-field" style="display: none;">
+            <label class="form-label">BIN *</label>
+            <input type="text" class="form-input" placeholder="请输入6-8位BIN" pattern="[0-9]{6,8}" id="bin-input">
+            <small style="color: var(--gray-500);">银行识别号前6-8位</small>
           </div>
           
           <div class="form-field" id="caid-field" style="display: none;">
             <label class="form-label">CAID *</label>
             <input type="text" class="form-input" placeholder="请输入CAID" id="caid-input">
-            <small style="color: var(--gray-500);">Visa卡必填项</small>
+            <small style="color: var(--gray-500);">客户授权标识符</small>
           </div>
           
           <div class="form-field">
@@ -1370,7 +1390,7 @@
           </div>
           
           <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end;">
-            <button type="button" class="btn btn-secondary" onclick="hideAddCardModal()">取消</button>
+            <button type="button" class="btn btn-secondary" onclick="hideAddDescriptorModal()">取消</button>
             <button type="submit" class="btn btn-primary">提交报备</button>
           </div>
         </form>
@@ -1379,29 +1399,29 @@
   </div>
 
   <script>
-    // 模拟卡片数据
-    let cardsData = [
-      { id: 1, descriptor: 'ABC-STORE', bin: '418756', caid: 'CA001', cardType: 'V', status: '已报备', createTime: '2024-12-01 14:30:25', email: 'alert@abc.com' },
-      { id: 2, descriptor: 'XYZ-SHOP', bin: '512345', caid: '-', cardType: 'M', status: '报备中', createTime: '2024-12-01 13:15:10', email: 'notify@xyz.com' },
-      { id: 3, descriptor: 'BEST-MALL', bin: '456789', caid: 'CA002', cardType: 'V', status: '已报备', createTime: '2024-11-30 16:45:30', email: 'alerts@best.com' },
-      { id: 4, descriptor: 'TECH-STORE', bin: '378901', caid: '-', cardType: 'M', status: '已关闭', createTime: '2024-11-30 11:20:15', email: 'tech@store.com' },
-      { id: 5, descriptor: 'GAME-WORLD', bin: '123456', caid: 'CA003', cardType: 'V', status: '已报备', createTime: '2024-11-29 09:30:45', email: 'game@world.com' },
-      { id: 6, descriptor: 'FOOD-HUB', bin: '987654', caid: 'CA004', cardType: 'V', status: '报备中', createTime: '2024-11-29 08:15:20', email: 'food@hub.com' },
-      { id: 7, descriptor: 'BOOK-STORE', bin: '345678', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-28 15:40:10', email: 'book@store.com' },
-      { id: 8, descriptor: 'AUTO-PARTS', bin: '567890', caid: 'CA005', cardType: 'V', status: '已关闭', createTime: '2024-11-28 12:25:35', email: 'auto@parts.com' },
-      { id: 9, descriptor: 'MUSIC-SHOP', bin: '234567', caid: 'CA006', cardType: 'V', status: '已报备', createTime: '2024-11-27 17:10:50', email: 'music@shop.com' },
-      { id: 10, descriptor: 'SPORT-GEAR', bin: '876543', caid: 'CA007', cardType: 'V', status: '报备中', createTime: '2024-11-27 14:55:25', email: 'sport@gear.com' },
-      { id: 11, descriptor: 'HOME-DECO', bin: '456123', caid: 'CA008', cardType: 'V', status: '已报备', createTime: '2024-11-26 10:30:15', email: 'home@deco.com' },
-      { id: 12, descriptor: 'PET-CARE', bin: '789012', caid: 'CA009', cardType: 'V', status: '已关闭', createTime: '2024-11-26 08:45:40', email: 'pet@care.com' },
-      { id: 13, descriptor: 'HEALTH-PLUS', bin: '135791', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-25 16:20:30', email: 'health@plus.com' },
-      { id: 14, descriptor: 'BEAUTY-SPA', bin: '246802', caid: 'CA010', cardType: 'V', status: '报备中', createTime: '2024-11-25 13:35:55', email: 'beauty@spa.com' },
-      { id: 15, descriptor: 'TRAVEL-GO', bin: '357913', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-24 11:15:20', email: 'travel@go.com' },
-      { id: 16, descriptor: 'KIDS-TOYS', bin: '468024', caid: 'CA011', cardType: 'V', status: '已关闭', createTime: '2024-11-24 09:50:45', email: 'kids@toys.com' },
-      { id: 17, descriptor: 'OFFICE-SUPPLY', bin: '579135', caid: '-', cardType: 'M', status: '已报备', createTime: '2024-11-23 15:25:10', email: 'office@supply.com' },
-      { id: 18, descriptor: 'GARDEN-CENTER', bin: '680246', caid: 'CA012', cardType: 'V', status: '报备中', createTime: '2024-11-23 12:40:35', email: 'garden@center.com' }
+    // 模拟Descriptor数据
+    let descriptorsData = [
+      { id: 1, alertType: 'ETHOCA', descriptor: 'ABC-STORE', bin: '-', caid: '-', status: '已报备', createTime: '2024-12-01 14:30:25', email: 'alert@abc.com' },
+      { id: 2, alertType: 'RDR', descriptor: 'XYZ-SHOP', bin: '512345', caid: 'CA001', status: '报备中', createTime: '2024-12-01 13:15:10', email: 'notify@xyz.com' },
+      { id: 3, alertType: 'ETHOCA', descriptor: 'BEST-MALL', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-30 16:45:30', email: 'alerts@best.com' },
+      { id: 4, alertType: 'RDR', descriptor: 'TECH-STORE', bin: '378901', caid: 'CA002', status: '已关闭', createTime: '2024-11-30 11:20:15', email: 'tech@store.com' },
+      { id: 5, alertType: 'ETHOCA', descriptor: 'GAME-WORLD', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-29 09:30:45', email: 'game@world.com' },
+      { id: 6, alertType: 'RDR', descriptor: 'FOOD-HUB', bin: '987654', caid: 'CA003', status: '报备中', createTime: '2024-11-29 08:15:20', email: 'food@hub.com' },
+      { id: 7, alertType: 'ETHOCA', descriptor: 'BOOK-STORE', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-28 15:40:10', email: 'book@store.com' },
+      { id: 8, alertType: 'RDR', descriptor: 'AUTO-PARTS', bin: '567890', caid: 'CA004', status: '已关闭', createTime: '2024-11-28 12:25:35', email: 'auto@parts.com' },
+      { id: 9, alertType: 'ETHOCA', descriptor: 'MUSIC-SHOP', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-27 17:10:50', email: 'music@shop.com' },
+      { id: 10, alertType: 'RDR', descriptor: 'SPORT-GEAR', bin: '876543', caid: 'CA005', status: '报备中', createTime: '2024-11-27 14:55:25', email: 'sport@gear.com' },
+      { id: 11, alertType: 'ETHOCA', descriptor: 'HOME-DECO', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-26 10:30:15', email: 'home@deco.com' },
+      { id: 12, alertType: 'RDR', descriptor: 'PET-CARE', bin: '789012', caid: 'CA006', status: '已关闭', createTime: '2024-11-26 08:45:40', email: 'pet@care.com' },
+      { id: 13, alertType: 'ETHOCA', descriptor: 'HEALTH-PLUS', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-25 16:20:30', email: 'health@plus.com' },
+      { id: 14, alertType: 'RDR', descriptor: 'BEAUTY-SPA', bin: '246802', caid: 'CA007', status: '报备中', createTime: '2024-11-25 13:35:55', email: 'beauty@spa.com' },
+      { id: 15, alertType: 'ETHOCA', descriptor: 'TRAVEL-GO', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-24 11:15:20', email: 'travel@go.com' },
+      { id: 16, alertType: 'RDR', descriptor: 'KIDS-TOYS', bin: '468024', caid: 'CA008', status: '已关闭', createTime: '2024-11-24 09:50:45', email: 'kids@toys.com' },
+      { id: 17, alertType: 'ETHOCA', descriptor: 'OFFICE-SUPPLY', bin: '-', caid: '-', status: '已报备', createTime: '2024-11-23 15:25:10', email: 'office@supply.com' },
+      { id: 18, alertType: 'RDR', descriptor: 'GARDEN-CENTER', bin: '680246', caid: 'CA009', status: '报备中', createTime: '2024-11-23 12:40:35', email: 'garden@center.com' }
     ];
 
-    let filteredData = [...cardsData];
+    let filteredData = [...descriptorsData];
     let currentPage = 1;
     let itemsPerPage = 10;
 
@@ -1560,7 +1580,7 @@
       
       // 根据页面ID设置对应的导航项为活跃状态
       const navMap = {
-        'cards': 0,
+        'descriptors': 0,
         'alerts': 1,
         'alert-detail': 1
       };
@@ -1614,7 +1634,7 @@
       document.getElementById('login-page').classList.remove('active');
       document.getElementById('app-page').classList.add('active');
       
-      showPage('cards');
+      showPage('descriptors');
       document.getElementById('app-page').classList.add('fade-in');
     }
 
@@ -1629,64 +1649,74 @@
       }
     }
 
-    // 显示添加卡片弹窗
-    function showAddCardModal() {
-      document.getElementById('add-card-modal').classList.add('active');
+    // 显示添加Descriptor弹窗
+    function showAddDescriptorModal() {
+      document.getElementById('add-descriptor-modal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    // 隐藏添加卡片弹窗
-    function hideAddCardModal() {
-      document.getElementById('add-card-modal').classList.remove('active');
+    // 隐藏添加Descriptor弹窗
+    function hideAddDescriptorModal() {
+      document.getElementById('add-descriptor-modal').classList.remove('active');
       document.body.style.overflow = 'auto';
       
-      // 重置表单
-      const form = document.querySelector('#add-card-modal form');
-      form.reset();
-      document.getElementById('caid-field').style.display = 'none';
-      document.getElementById('caid-input').required = false;
+              // 重置表单
+        const form = document.querySelector('#add-descriptor-modal form');
+        form.reset();
+        document.getElementById('bin-field').style.display = 'none';
+        document.getElementById('caid-field').style.display = 'none';
+        document.getElementById('bin-input').required = false;
+        document.getElementById('caid-input').required = false;
     }
 
-    // 检查卡类型
-    function checkCardType(bin) {
+    // 切换预警类型字段显示
+    function toggleAlertTypeFields() {
+      const alertType = document.getElementById('alert-type-select').value;
+      const binField = document.getElementById('bin-field');
       const caidField = document.getElementById('caid-field');
+      const binInput = document.getElementById('bin-input');
       const caidInput = document.getElementById('caid-input');
       
-      if (bin.length >= 6) {
-        const sixthDigit = parseInt(bin.charAt(5));
-        
-        if (sixthDigit % 2 === 0) {
-          // 双数是V卡，需要CAID
-          caidField.style.display = 'block';
-          caidInput.required = true;
-        } else {
-          // 单数是M卡，不需要CAID
-          caidField.style.display = 'none';
-          caidInput.required = false;
-          caidInput.value = '';
-        }
-      } else {
+      if (alertType === 'ETHOCA') {
+        // ETHOCA只需要Descriptor
+        binField.style.display = 'none';
         caidField.style.display = 'none';
+        binInput.required = false;
+        caidInput.required = false;
+        binInput.value = '';
+        caidInput.value = '';
+      } else if (alertType === 'RDR') {
+        // RDR需要Descriptor、BIN、CAID
+        binField.style.display = 'block';
+        caidField.style.display = 'block';
+        binInput.required = true;
+        caidInput.required = true;
+      } else {
+        // 未选择类型，隐藏所有额外字段
+        binField.style.display = 'none';
+        caidField.style.display = 'none';
+        binInput.required = false;
         caidInput.required = false;
       }
     }
 
-    // 处理添加卡片
-    function handleAddCard(event) {
+    // 处理添加Descriptor
+    function handleAddDescriptor(event) {
       event.preventDefault();
       
+      const alertType = document.getElementById('alert-type-select').value;
       const descriptor = document.getElementById('descriptor-input').value.trim();
       const bin = document.getElementById('bin-input').value.trim();
       const caid = document.getElementById('caid-input').value.trim();
       const email = document.getElementById('email-input').value.trim();
       
-      if (!descriptor) {
-        alert('请填写商户描述符');
+      if (!alertType) {
+        alert('请选择预警类型');
         return;
       }
       
-      if (!bin) {
-        alert('请填写卡片BIN');
+      if (!descriptor) {
+        alert('请填写Descriptor');
         return;
       }
       
@@ -1695,20 +1725,25 @@
         return;
       }
       
-      // 检查是否是V卡且需要CAID
-      const sixthDigit = parseInt(bin.charAt(5));
-      if (sixthDigit % 2 === 0 && !caid) {
-        alert('Visa卡需要填写CAID');
-        return;
+      // RDR类型需要验证BIN和CAID
+      if (alertType === 'RDR') {
+        if (!bin) {
+          alert('RDR类型需要填写BIN');
+          return;
+        }
+        if (!caid) {
+          alert('RDR类型需要填写CAID');
+          return;
+        }
       }
       
-      // 添加新卡片
-      const newCard = {
-        id: cardsData.length + 1,
+      // 添加新Descriptor
+      const newDescriptor = {
+        id: descriptorsData.length + 1,
+        alertType: alertType,
         descriptor: descriptor,
-        bin: bin,
-        caid: sixthDigit % 2 === 0 ? caid : '-',
-        cardType: sixthDigit % 2 === 0 ? 'V' : 'M',
+        bin: alertType === 'RDR' ? bin : '-',
+        caid: alertType === 'RDR' ? caid : '-',
         status: '报备中',
         createTime: new Date().toLocaleString('zh-CN', {
           year: 'numeric',
@@ -1721,34 +1756,37 @@
         email: email
       };
       
-      cardsData.unshift(newCard); // 添加到数组开头
-      filteredData = [...cardsData];
+      descriptorsData.unshift(newDescriptor); // 添加到数组开头
+      filteredData = [...descriptorsData];
       
-      alert('卡片报备提交成功！');
-      hideAddCardModal();
+      alert('Descriptor报备提交成功！');
+      hideAddDescriptorModal();
       renderTable();
       updatePagination();
     }
 
     // 渲染表格
     function renderTable() {
-      const tbody = document.getElementById('cards-table-body');
+      const tbody = document.getElementById('descriptors-table-body');
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       const currentData = filteredData.slice(startIndex, endIndex);
       
-      tbody.innerHTML = currentData.map(card => `
+      tbody.innerHTML = currentData.map(descriptor => `
         <tr class="table-row">
-          <td>${card.descriptor}</td>
-          <td style="font-family: var(--font-family-number);">${card.bin}</td>
-          <td>${card.caid}</td>
           <td>
-            <span class="badge ${getStatusClass(card.status)}">${card.status}</span>
+            <span class="badge ${descriptor.alertType === 'ETHOCA' ? 'badge-info' : 'badge-secondary'}">${descriptor.alertType}</span>
           </td>
-          <td>${card.createTime}</td>
+          <td>${descriptor.descriptor}</td>
+          <td style="font-family: var(--font-family-number);">${descriptor.bin}</td>
+          <td>${descriptor.caid}</td>
           <td>
-            ${card.status === '已报备' ? 
-              `<button class="btn btn-text" style="color: var(--danger);" onclick="closeCard(${card.id})">关闭</button>` :
+            <span class="badge ${getStatusClass(descriptor.status)}">${descriptor.status}</span>
+          </td>
+          <td>${descriptor.createTime}</td>
+          <td>
+            ${descriptor.status === '已报备' ? 
+              `<button class="btn btn-text" style="color: var(--danger);" onclick="closeDescriptor(${descriptor.id})">关闭</button>` :
               '<span style="color: var(--gray-400);">-</span>'
             }
           </td>
@@ -1766,49 +1804,54 @@
       }
     }
 
-    // 关闭卡片
-    function closeCard(cardId) {
-      if (confirm('确定要关闭这张卡片吗？')) {
-        const cardIndex = cardsData.findIndex(card => card.id === cardId);
-        if (cardIndex !== -1) {
-          cardsData[cardIndex].status = '已关闭';
+    // 关闭Descriptor
+    function closeDescriptor(descriptorId) {
+      if (confirm('确定要关闭这个Descriptor吗？')) {
+        const descriptorIndex = descriptorsData.findIndex(descriptor => descriptor.id === descriptorId);
+        if (descriptorIndex !== -1) {
+          descriptorsData[descriptorIndex].status = '已关闭';
           applyFilters();
-          alert('卡片已关闭');
+          alert('Descriptor已关闭');
         }
       }
     }
 
     // 应用筛选
     function applyFilters() {
-      const descriptor = document.getElementById('filter-descriptor').value.trim().toLowerCase();
+      const alertType = document.getElementById('filter-alert-type').value;
+      const descriptorValue = document.getElementById('filter-descriptor').value.trim().toLowerCase();
       const dateStart = document.getElementById('filter-date-start').value;
       const dateEnd = document.getElementById('filter-date-end').value;
       const status = document.getElementById('filter-status').value;
       
-      filteredData = cardsData.filter(card => {
+      filteredData = descriptorsData.filter(item => {
         let match = true;
         
-        if (descriptor && !card.descriptor.toLowerCase().includes(descriptor)) {
+        if (alertType && item.alertType !== alertType) {
+          match = false;
+        }
+        
+        if (descriptorValue && !item.descriptor.toLowerCase().includes(descriptorValue)) {
           match = false;
         }
         
         if (dateStart) {
-          const cardDate = new Date(card.createTime);
+          const itemDate = new Date(item.createTime);
           const startDate = new Date(dateStart);
-          if (cardDate < startDate) {
+          if (itemDate < startDate) {
             match = false;
           }
         }
         
         if (dateEnd) {
-          const cardDate = new Date(card.createTime);
+          const itemDate = new Date(item.createTime);
           const endDate = new Date(dateEnd + ' 23:59:59');
-          if (cardDate > endDate) {
+          if (itemDate > endDate) {
             match = false;
           }
         }
         
-        if (status && card.status !== status) {
+        if (status && item.status !== status) {
           match = false;
         }
         
@@ -1822,12 +1865,13 @@
 
     // 重置筛选
     function resetFilters() {
+      document.getElementById('filter-alert-type').value = '';
       document.getElementById('filter-descriptor').value = '';
       document.getElementById('filter-date-start').value = '';
       document.getElementById('filter-date-end').value = '';
       document.getElementById('filter-status').value = '';
       
-      filteredData = [...cardsData];
+      filteredData = [...descriptorsData];
       currentPage = 1;
       renderTable();
       updatePagination();
@@ -1910,22 +1954,22 @@
 
     // 点击弹窗外部关闭弹窗
     document.addEventListener('click', function(e) {
-      const modal = document.getElementById('add-card-modal');
+      const modal = document.getElementById('add-descriptor-modal');
       if (e.target === modal) {
-        hideAddCardModal();
+        hideAddDescriptorModal();
       }
     });
 
     // ESC键关闭弹窗
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        hideAddCardModal();
+        hideAddDescriptorModal();
       }
     });
 
     // 初始化页面
     document.addEventListener('DOMContentLoaded', function() {
-      showPage('cards');
+      showPage('descriptors');
       renderTable();
       updatePagination();
       renderAlertsTable();
@@ -1944,15 +1988,15 @@
         });
       });
       
-      // 添加卡片悬停效果
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
+      // 添加Descriptor悬停效果
+      const descriptors = document.querySelectorAll('.card');
+      descriptors.forEach(descriptor => {
+        descriptor.addEventListener('mouseenter', function() {
           this.style.transform = 'translateY(-2px)';
           this.style.boxShadow = 'var(--shadow-lg)';
         });
         
-        card.addEventListener('mouseleave', function() {
+        descriptor.addEventListener('mouseleave', function() {
           this.style.transform = 'translateY(0)';
           this.style.boxShadow = 'var(--shadow-sm)';
         });

@@ -248,6 +248,16 @@
       color: var(--info);
     }
 
+    .badge-ethoca {
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    .badge-rdr {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
     .badge-secondary {
       background: var(--gray-200);
       color: var(--gray-600);
@@ -807,9 +817,9 @@
       <!-- 侧边导航栏 -->
       <aside class="app-sidebar">
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active" onclick="showPage('cards')">
-            <div class="nav-icon">💳</div>
-            <span>Card Management</span>
+          <a href="#" class="nav-item active" onclick="showPage('descriptors')">
+            <div class="nav-icon">🏷️</div>
+            <span>Descriptor Management</span>
           </a>
           <a href="#" class="nav-item" onclick="showPage('alerts')">
             <div class="nav-icon">⚠️</div>
@@ -820,18 +830,27 @@
 
       <!-- 主内容区域 -->
       <main class="app-main">
-        <!-- 卡片管理页面 -->
-        <div id="cards-content" class="content-page active">
+        <!-- Descriptor管理页面 -->
+        <div id="descriptors-content" class="content-page active">
           <div class="page-header">
-            <h1 class="page-title">Card Management</h1>
+            <h1 class="page-title">Descriptor Management</h1>
             <div class="page-actions">
-              <button class="btn btn-primary" onclick="showAddCardModal()">Add Card</button>
+              <button class="btn btn-primary" onclick="showAddDescriptorModal()">Add Descriptor</button>
             </div>
           </div>
           
           <!-- 筛选栏 -->
           <div class="filters-bar">
             <div class="filters-left">
+              <div class="filter-group">
+                <label>Alert Type</label>
+                <select class="form-select" id="filter-alert-type">
+                  <option value="">All Types</option>
+                  <option value="ETHOCA">ETHOCA</option>
+                  <option value="RDR">RDR</option>
+                </select>
+              </div>
+              
               <div class="filter-group">
                 <label>Descriptor</label>
                 <input type="text" class="form-input" placeholder="Enter descriptor" id="filter-descriptor">
@@ -863,25 +882,26 @@
             </div>
           </div>
           
-          <!-- 卡片列表 -->
+          <!-- Descriptor列表 -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Authorized Cards</h3>
+              <h3 class="card-title">Authorized Descriptors</h3>
             </div>
             <div class="card-body">
               <div style="overflow-x: auto;">
                 <table class="data-table">
                   <thead>
                     <tr>
+                      <th>Alert Type</th>
                       <th>Descriptor</th>
-                      <th>Card BIN</th>
+                      <th>BIN</th>
                       <th>CAID</th>
                       <th>Status</th>
                       <th>Created Time</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody id="cards-table-body">
+                  <tbody id="descriptors-table-body">
                     <!-- 动态生成数据 -->
                   </tbody>
                 </table>
@@ -1279,41 +1299,51 @@
     </div>
   </div>
 
-  <!-- 添加卡片弹窗 -->
-  <div id="add-card-modal" class="modal">
+  <!-- 添加Descriptor弹窗 -->
+  <div id="add-descriptor-modal" class="modal">
     <div class="modal-content">
       <div class="card-header">
-        <h3 class="card-title">Add Authorization Card</h3>
-        <button class="btn btn-text" onclick="hideAddCardModal()">✕</button>
+        <h3 class="card-title">Add Descriptor</h3>
+        <button class="btn btn-text" onclick="hideAddDescriptorModal()">✕</button>
       </div>
       <div class="card-body">
-        <form class="card-form" onsubmit="handleAddCard(event)">
+        <form class="card-form" onsubmit="handleAddDescriptor(event)">
           <div class="form-field">
-            <label class="form-label">Merchant Descriptor *</label>
-            <input type="text" class="form-input" placeholder="Enter descriptor" required id="descriptor-input">
-            <small style="color: var(--gray-500);">Merchant identifier for chargeback recognition</small>
+            <label class="form-label">Alert Type *</label>
+            <select class="form-select" id="alert-type-select" onchange="toggleAlertTypeFields()" required>
+              <option value="">Select alert type</option>
+              <option value="ETHOCA">ETHOCA</option>
+              <option value="RDR">RDR</option>
+            </select>
+            <small style="color: var(--gray-500);">Choose the alert service type</small>
           </div>
           
           <div class="form-field">
-            <label class="form-label">Card BIN *</label>
-            <input type="text" class="form-input" placeholder="Enter 6-8 digit card BIN" pattern="[0-9]{6,8}" required id="bin-input" oninput="checkCardType(this.value)">
-            <small style="color: var(--gray-500);">First 6-8 digits of card number</small>
+            <label class="form-label">Descriptor *</label>
+            <input type="text" class="form-input" placeholder="Enter descriptor" required id="descriptor-input">
+            <small style="color: var(--gray-500);">Merchant identifier for alert service</small>
+          </div>
+          
+          <div class="form-field" id="bin-field" style="display: none;">
+            <label class="form-label">BIN *</label>
+            <input type="text" class="form-input" placeholder="Enter 6-8 digit BIN" pattern="[0-9]{6,8}" id="bin-input">
+            <small style="color: var(--gray-500);">Bank Identification Number</small>
           </div>
           
           <div class="form-field" id="caid-field" style="display: none;">
             <label class="form-label">CAID *</label>
             <input type="text" class="form-input" placeholder="Enter CAID" id="caid-input">
-            <small style="color: var(--gray-500);">Required for Visa cards</small>
+            <small style="color: var(--gray-500);">Customer Authorization Identifier</small>
           </div>
           
           <div class="form-field">
-            <label class="form-label">Alert Email *</label>
+            <label class="form-label">Notification Email *</label>
             <input type="email" class="form-input" placeholder="Email for alert notifications" required id="email-input">
           </div>
           
           <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end;">
-            <button type="button" class="btn btn-secondary" onclick="hideAddCardModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Submit Registration</button>
+            <button type="button" class="btn btn-secondary" onclick="hideAddDescriptorModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </form>
       </div>
@@ -1321,29 +1351,29 @@
   </div>
 
   <script>
-    // 模拟卡片数据
-    let cardsData = [
-      { id: 1, descriptor: 'ABC-STORE', bin: '418756', caid: 'CA001', cardType: 'V', status: 'Registered', createTime: '2024-12-01 14:30:25', email: 'alert@abc.com' },
-      { id: 2, descriptor: 'XYZ-SHOP', bin: '512345', caid: '-', cardType: 'M', status: 'Pending', createTime: '2024-12-01 13:15:10', email: 'notify@xyz.com' },
-      { id: 3, descriptor: 'BEST-MALL', bin: '456789', caid: 'CA002', cardType: 'V', status: 'Registered', createTime: '2024-11-30 16:45:30', email: 'alerts@best.com' },
-      { id: 4, descriptor: 'TECH-STORE', bin: '378901', caid: '-', cardType: 'M', status: 'Closed', createTime: '2024-11-30 11:20:15', email: 'tech@store.com' },
-      { id: 5, descriptor: 'GAME-WORLD', bin: '123456', caid: 'CA003', cardType: 'V', status: 'Registered', createTime: '2024-11-29 09:30:45', email: 'game@world.com' },
-      { id: 6, descriptor: 'FOOD-HUB', bin: '987654', caid: 'CA004', cardType: 'V', status: 'Pending', createTime: '2024-11-29 08:15:20', email: 'food@hub.com' },
-      { id: 7, descriptor: 'BOOK-STORE', bin: '345678', caid: '-', cardType: 'M', status: 'Registered', createTime: '2024-11-28 15:40:10', email: 'book@store.com' },
-      { id: 8, descriptor: 'AUTO-PARTS', bin: '567890', caid: 'CA005', cardType: 'V', status: 'Closed', createTime: '2024-11-28 12:25:35', email: 'auto@parts.com' },
-      { id: 9, descriptor: 'MUSIC-SHOP', bin: '234567', caid: 'CA006', cardType: 'V', status: 'Registered', createTime: '2024-11-27 17:10:50', email: 'music@shop.com' },
-      { id: 10, descriptor: 'SPORT-GEAR', bin: '876543', caid: 'CA007', cardType: 'V', status: 'Pending', createTime: '2024-11-27 14:55:25', email: 'sport@gear.com' },
-      { id: 11, descriptor: 'HOME-DECO', bin: '456123', caid: 'CA008', cardType: 'V', status: 'Registered', createTime: '2024-11-26 10:30:15', email: 'home@deco.com' },
-      { id: 12, descriptor: 'PET-CARE', bin: '789012', caid: 'CA009', cardType: 'V', status: 'Closed', createTime: '2024-11-26 08:45:40', email: 'pet@care.com' },
-      { id: 13, descriptor: 'HEALTH-PLUS', bin: '135791', caid: '-', cardType: 'M', status: 'Registered', createTime: '2024-11-25 16:20:30', email: 'health@plus.com' },
-      { id: 14, descriptor: 'BEAUTY-SPA', bin: '246802', caid: 'CA010', cardType: 'V', status: 'Pending', createTime: '2024-11-25 13:35:55', email: 'beauty@spa.com' },
-      { id: 15, descriptor: 'TRAVEL-GO', bin: '357913', caid: '-', cardType: 'M', status: 'Registered', createTime: '2024-11-24 11:15:20', email: 'travel@go.com' },
-      { id: 16, descriptor: 'KIDS-TOYS', bin: '468024', caid: 'CA011', cardType: 'V', status: 'Closed', createTime: '2024-11-24 09:50:45', email: 'kids@toys.com' },
-      { id: 17, descriptor: 'OFFICE-SUPPLY', bin: '579135', caid: '-', cardType: 'M', status: 'Registered', createTime: '2024-11-23 15:25:10', email: 'office@supply.com' },
-      { id: 18, descriptor: 'GARDEN-CENTER', bin: '680246', caid: 'CA012', cardType: 'V', status: 'Pending', createTime: '2024-11-23 12:40:35', email: 'garden@center.com' }
+    // Mock Descriptor data
+    let descriptorsData = [
+      { id: 1, alertType: 'ETHOCA', descriptor: 'ABC-STORE', bin: '-', caid: '-', status: 'Registered', createTime: '2024-12-01 14:30:25', email: 'alert@abc.com' },
+      { id: 2, alertType: 'RDR', descriptor: 'XYZ-SHOP', bin: '512345', caid: 'CA001', status: 'Pending', createTime: '2024-12-01 13:15:10', email: 'notify@xyz.com' },
+      { id: 3, alertType: 'ETHOCA', descriptor: 'BEST-MALL', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-30 16:45:30', email: 'alerts@best.com' },
+      { id: 4, alertType: 'RDR', descriptor: 'TECH-STORE', bin: '378901', caid: 'CA002', status: 'Closed', createTime: '2024-11-30 11:20:15', email: 'tech@store.com' },
+      { id: 5, alertType: 'ETHOCA', descriptor: 'GAME-WORLD', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-29 09:30:45', email: 'game@world.com' },
+      { id: 6, alertType: 'RDR', descriptor: 'FOOD-HUB', bin: '987654', caid: 'CA003', status: 'Pending', createTime: '2024-11-29 08:15:20', email: 'food@hub.com' },
+      { id: 7, alertType: 'ETHOCA', descriptor: 'BOOK-STORE', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-28 15:40:10', email: 'book@store.com' },
+      { id: 8, alertType: 'RDR', descriptor: 'AUTO-PARTS', bin: '567890', caid: 'CA004', status: 'Closed', createTime: '2024-11-28 12:25:35', email: 'auto@parts.com' },
+      { id: 9, alertType: 'ETHOCA', descriptor: 'MUSIC-SHOP', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-27 17:10:50', email: 'music@shop.com' },
+      { id: 10, alertType: 'RDR', descriptor: 'SPORT-GEAR', bin: '876543', caid: 'CA005', status: 'Pending', createTime: '2024-11-27 14:55:25', email: 'sport@gear.com' },
+      { id: 11, alertType: 'ETHOCA', descriptor: 'HOME-DECO', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-26 10:30:15', email: 'home@deco.com' },
+      { id: 12, alertType: 'RDR', descriptor: 'PET-CARE', bin: '789012', caid: 'CA006', status: 'Closed', createTime: '2024-11-26 08:45:40', email: 'pet@care.com' },
+      { id: 13, alertType: 'ETHOCA', descriptor: 'HEALTH-PLUS', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-25 16:20:30', email: 'health@plus.com' },
+      { id: 14, alertType: 'RDR', descriptor: 'BEAUTY-SPA', bin: '246802', caid: 'CA007', status: 'Pending', createTime: '2024-11-25 13:35:55', email: 'beauty@spa.com' },
+      { id: 15, alertType: 'ETHOCA', descriptor: 'TRAVEL-GO', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-24 11:15:20', email: 'travel@go.com' },
+      { id: 16, alertType: 'RDR', descriptor: 'KIDS-TOYS', bin: '468024', caid: 'CA008', status: 'Closed', createTime: '2024-11-24 09:50:45', email: 'kids@toys.com' },
+      { id: 17, alertType: 'ETHOCA', descriptor: 'OFFICE-SUPPLY', bin: '-', caid: '-', status: 'Registered', createTime: '2024-11-23 15:25:10', email: 'office@supply.com' },
+      { id: 18, alertType: 'RDR', descriptor: 'GARDEN-CENTER', bin: '680246', caid: 'CA009', status: 'Pending', createTime: '2024-11-23 12:40:35', email: 'garden@center.com' }
     ];
 
-    let filteredData = [...cardsData];
+    let filteredData = [...descriptorsData];
     let currentPage = 1;
     let itemsPerPage = 10;
 
@@ -1502,7 +1532,7 @@
       
       // 根据页面ID设置对应的导航项为活跃状态
       const navMap = {
-        'cards': 0,
+        'descriptors': 0,
         'alerts': 1,
         'alert-detail': 1
       };
@@ -1556,7 +1586,7 @@
       document.getElementById('login-page').classList.remove('active');
       document.getElementById('app-page').classList.add('active');
       
-      showPage('cards');
+      showPage('descriptors');
       document.getElementById('app-page').classList.add('fade-in');
     }
 
@@ -1571,127 +1601,134 @@
       }
     }
 
-    // 显示添加卡片弹窗
-    function showAddCardModal() {
-      document.getElementById('add-card-modal').classList.add('active');
+    // 显示添加Descriptor弹窗
+    function showAddDescriptorModal() {
+      document.getElementById('add-descriptor-modal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    // 隐藏添加卡片弹窗
-    function hideAddCardModal() {
-      document.getElementById('add-card-modal').classList.remove('active');
+    // 隐藏添加Descriptor弹窗
+    function hideAddDescriptorModal() {
+      document.getElementById('add-descriptor-modal').classList.remove('active');
       document.body.style.overflow = 'auto';
       
       // 重置表单
-      const form = document.querySelector('#add-card-modal form');
+      const form = document.querySelector('#add-descriptor-modal form');
       form.reset();
+      document.getElementById('bin-field').style.display = 'none';
       document.getElementById('caid-field').style.display = 'none';
+      document.getElementById('bin-input').required = false;
       document.getElementById('caid-input').required = false;
     }
 
-    // 检查卡类型
-    function checkCardType(bin) {
+    // 切换预警类型字段显示
+    function toggleAlertTypeFields() {
+      const alertType = document.getElementById('alert-type-select').value;
+      const binField = document.getElementById('bin-field');
       const caidField = document.getElementById('caid-field');
+      const binInput = document.getElementById('bin-input');
       const caidInput = document.getElementById('caid-input');
       
-      if (bin.length >= 6) {
-        const sixthDigit = parseInt(bin.charAt(5));
-        
-        if (sixthDigit % 2 === 0) {
-          // 双数是V卡，需要CAID
-          caidField.style.display = 'block';
-          caidInput.required = true;
-        } else {
-          // 单数是M卡，不需要CAID
-          caidField.style.display = 'none';
-          caidInput.required = false;
-          caidInput.value = '';
-        }
-      } else {
+      if (alertType === 'ETHOCA') {
+        binField.style.display = 'none';
         caidField.style.display = 'none';
+        binInput.required = false;
+        caidInput.required = false;
+        binInput.value = '';
+        caidInput.value = '';
+      } else if (alertType === 'RDR') {
+        binField.style.display = 'block';
+        caidField.style.display = 'block';
+        binInput.required = true;
+        caidInput.required = true;
+      } else {
+        binField.style.display = 'none';
+        caidField.style.display = 'none';
+        binInput.required = false;
         caidInput.required = false;
       }
     }
 
-    // 处理添加卡片
-    function handleAddCard(event) {
+    // 处理添加Descriptor
+    function handleAddDescriptor(event) {
       event.preventDefault();
       
+      const alertType = document.getElementById('alert-type-select').value;
       const descriptor = document.getElementById('descriptor-input').value.trim();
       const bin = document.getElementById('bin-input').value.trim();
       const caid = document.getElementById('caid-input').value.trim();
       const email = document.getElementById('email-input').value.trim();
       
-      if (!descriptor) {
-        alert('Please enter merchant descriptor');
+      if (!alertType) {
+        alert('Please select alert type');
         return;
       }
       
-      if (!bin) {
-        alert('Please enter card BIN');
+      if (!descriptor) {
+        alert('Please enter descriptor');
         return;
       }
       
       if (!email) {
-        alert('Please enter alert email');
+        alert('Please enter notification email');
         return;
       }
       
-      // 检查是否是V卡且需要CAID
-      const sixthDigit = parseInt(bin.charAt(5));
-      if (sixthDigit % 2 === 0 && !caid) {
-        alert('CAID is required for Visa cards');
-        return;
+      // RDR类型需要验证BIN和CAID
+      if (alertType === 'RDR') {
+        if (!bin) {
+          alert('BIN is required for RDR type');
+          return;
+        }
+        if (!caid) {
+          alert('CAID is required for RDR type');
+          return;
+        }
       }
       
-      // 添加新卡片
-      const newCard = {
-        id: cardsData.length + 1,
+      // 添加新Descriptor
+      const newDescriptor = {
+        id: descriptorsData.length + 1,
+        alertType: alertType,
         descriptor: descriptor,
-        bin: bin,
-        caid: sixthDigit % 2 === 0 ? caid : '-',
-        cardType: sixthDigit % 2 === 0 ? 'V' : 'M',
+        bin: alertType === 'ETHOCA' ? '-' : bin,
+        caid: alertType === 'ETHOCA' ? '-' : caid,
         status: 'Pending',
-        createTime: new Date().toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        }).replace(/(\d+)\/(\d+)\/(\d+),\s(.+)/, '$3-$1-$2 $4'),
+        createTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
         email: email
       };
       
-      cardsData.unshift(newCard); // 添加到数组开头
-      filteredData = [...cardsData];
+      descriptorsData.unshift(newDescriptor);
+      filteredData = [...descriptorsData];
       
-      alert('Card registration submitted successfully!');
-      hideAddCardModal();
+      alert('Descriptor registration submitted successfully!');
+      hideAddDescriptorModal();
       renderTable();
       updatePagination();
     }
 
     // 渲染表格
     function renderTable() {
-      const tbody = document.getElementById('cards-table-body');
+      const tbody = document.getElementById('descriptors-table-body');
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       const currentData = filteredData.slice(startIndex, endIndex);
       
-      tbody.innerHTML = currentData.map(card => `
+      tbody.innerHTML = currentData.map(item => `
         <tr class="table-row">
-          <td>${card.descriptor}</td>
-          <td style="font-family: var(--font-family-number);">${card.bin}</td>
-          <td>${card.caid}</td>
           <td>
-            <span class="badge ${getStatusClass(card.status)}">${card.status}</span>
+            <span class="badge ${item.alertType === 'ETHOCA' ? 'badge-ethoca' : 'badge-rdr'}">${item.alertType}</span>
           </td>
-          <td>${card.createTime}</td>
+          <td>${item.descriptor}</td>
+          <td style="font-family: var(--font-family-number);">${item.bin}</td>
+          <td>${item.caid}</td>
           <td>
-            ${card.status === 'Registered' ? 
-              `<button class="btn btn-text" style="color: var(--danger);" onclick="closeCard(${card.id})">Close</button>` :
+            <span class="badge ${getStatusClass(item.status)}">${item.status}</span>
+          </td>
+          <td>${item.createTime}</td>
+          <td>
+            ${item.status === 'Registered' ? 
+              `<button class="btn btn-text" style="color: var(--danger);" onclick="closeDescriptor(${item.id})">Close</button>` :
               '<span style="color: var(--gray-400);">-</span>'
             }
           </td>
@@ -1709,49 +1746,54 @@
       }
     }
 
-    // 关闭卡片
-    function closeCard(cardId) {
-      if (confirm('Are you sure you want to close this card?')) {
-        const cardIndex = cardsData.findIndex(card => card.id === cardId);
-        if (cardIndex !== -1) {
-          cardsData[cardIndex].status = 'Closed';
+    // 关闭Descriptor
+    function closeDescriptor(descriptorId) {
+      if (confirm('Are you sure you want to close this descriptor?')) {
+        const descriptorIndex = descriptorsData.findIndex(item => item.id === descriptorId);
+        if (descriptorIndex !== -1) {
+          descriptorsData[descriptorIndex].status = 'Closed';
           applyFilters();
-          alert('Card has been closed successfully!');
+          alert('Descriptor has been closed successfully!');
         }
       }
     }
 
     // 应用筛选
     function applyFilters() {
+      const alertType = document.getElementById('filter-alert-type').value;
       const descriptor = document.getElementById('filter-descriptor').value.trim().toLowerCase();
       const dateStart = document.getElementById('filter-date-start').value;
       const dateEnd = document.getElementById('filter-date-end').value;
       const status = document.getElementById('filter-status').value;
       
-      filteredData = cardsData.filter(card => {
+      filteredData = descriptorsData.filter(item => {
         let match = true;
         
-        if (descriptor && !card.descriptor.toLowerCase().includes(descriptor)) {
+        if (alertType && item.alertType !== alertType) {
+          match = false;
+        }
+        
+        if (descriptor && !item.descriptor.toLowerCase().includes(descriptor)) {
           match = false;
         }
         
         if (dateStart) {
-          const cardDate = new Date(card.createTime);
+          const itemDate = new Date(item.createTime);
           const startDate = new Date(dateStart);
-          if (cardDate < startDate) {
+          if (itemDate < startDate) {
             match = false;
           }
         }
         
         if (dateEnd) {
-          const cardDate = new Date(card.createTime);
+          const itemDate = new Date(item.createTime);
           const endDate = new Date(dateEnd + ' 23:59:59');
-          if (cardDate > endDate) {
+          if (itemDate > endDate) {
             match = false;
           }
         }
         
-        if (status && card.status !== status) {
+        if (status && item.status !== status) {
           match = false;
         }
         
@@ -1765,12 +1807,13 @@
 
     // 重置筛选
     function resetFilters() {
+      document.getElementById('filter-alert-type').value = '';
       document.getElementById('filter-descriptor').value = '';
       document.getElementById('filter-date-start').value = '';
       document.getElementById('filter-date-end').value = '';
       document.getElementById('filter-status').value = '';
       
-      filteredData = [...cardsData];
+      filteredData = [...descriptorsData];
       currentPage = 1;
       renderTable();
       updatePagination();
@@ -1888,22 +1931,22 @@
 
     // 点击弹窗外部关闭弹窗
     document.addEventListener('click', function(e) {
-      const modal = document.getElementById('add-card-modal');
+      const modal = document.getElementById('add-descriptor-modal');
       if (e.target === modal) {
-        hideAddCardModal();
+        hideAddDescriptorModal();
       }
     });
 
     // ESC键关闭弹窗
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        hideAddCardModal();
+        hideAddDescriptorModal();
       }
     });
 
     // 初始化页面
     document.addEventListener('DOMContentLoaded', function() {
-      showPage('cards');
+      showPage('descriptors');
       renderTable();
       updatePagination();
       renderAlertsTable();
