@@ -1583,3 +1583,63 @@ caid: alertType === 'ETHOCA' ? '-' : caid,
 ✅ **视觉效果**: 预警类型徽章、状态标识等显示正确
 
 英文版客户门户现已达到生产就绪状态！
+
+## 管理员门户调整完成 (2024年12月)
+
+### 调整需求
+用户要求对 `admin-portal.html` 进行以下调整：
+
+#### 1. 客户管理查看页面调整 ✅
+**原字段移除**:
+- ❌ 卡片ID
+- ❌ 卡片类型  
+- ❌ 卡片信息
+- ❌ 描述字段
+
+**新增字段**:
+- ✅ 预警类型（ETHOCA、RDR）
+- ✅ Descriptor
+- ✅ BIN
+- ✅ CAID
+
+#### 2. 预警管理页面重新规划 ✅
+**新列表字段结构**:
+- ✅ 接收时间——接收预警通知的时间
+- ✅ 预警类型——ETHOCA / RDR  
+
+## 2024-12-10
+
+### 管理后台客户详情页面导航修复
+
+**问题描述：**
+- 客户管理页面点击"查看"按钮无法正常进入客户详情页面
+
+**问题原因：**
+1. `showMerchantDetail`函数中引用的HTML元素ID与实际页面不匹配
+2. `merchant-cards-count` 应为 `merchant-descriptors-count`
+3. `merchant-cards-table-body` 应为 `merchant-descriptors-table-body`
+
+**修复内容：**
+1. 修正`showMerchantDetail`函数中的元素ID引用：
+   - `merchant-cards-count` → `merchant-descriptors-count`
+2. 修正`renderMerchantCards`函数中的表格body引用：
+   - `merchant-cards-table-body` → `merchant-descriptors-table-body`
+3. 更新注释内容从"卡片"改为"Descriptor"
+
+**修改文件：**
+- `output/admin-portal.html` - 修复JavaScript函数中的元素引用错误
+
+**验证结果：**
+- ✅ 客户管理页面"查看"按钮现在可以正常跳转到客户详情页面
+- ✅ 客户详情页面可以正确显示客户信息和Descriptor列表
+- ✅ 页面间导航正常工作
+
+## v18
+- 【中英文客户门户】右上角头像点击新增下拉菜单，支持"修改密码"入口
+- 新增"修改密码"页面，包含当前密码、新密码、确认新密码输入框，支持实时校验：
+  - 当前密码错误提示
+  - 新密码长度不少于6位，且不能与当前密码相同
+  - 两次新密码输入不一致提示
+- 修改密码成功后自动登出，需重新登录
+- 所有提示、按钮、校验均中英文适配
+- 修复英文版user-menu样式，保证头像和用户名横向排列

@@ -808,6 +808,130 @@
     .text-right {
       text-align: right;
     }
+
+    /* 用户下拉菜单样式 */
+    .user-menu {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 180px;
+      background: var(--bg-primary);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+
+    .user-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 12px 16px;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: var(--border-radius-md);
+      margin: 4px;
+    }
+
+    .dropdown-item:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .dropdown-icon {
+      font-size: 16px;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 4px 0;
+    }
+
+    /* 修改密码页面样式 */
+    .change-password-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .password-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .form-error {
+      color: var(--danger);
+      font-size: var(--font-size-small);
+      margin-top: var(--spacing-xs);
+      display: none;
+    }
+
+    .form-success {
+      color: var(--success);
+      font-size: var(--font-size-small);
+      margin-top: var(--spacing-xs);
+      display: none;
+    }
+
+    .form-input.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-input.success {
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+
+    .password-requirements {
+      background: var(--info-light);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      margin-top: var(--spacing-sm);
+    }
+
+    .requirement-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: var(--font-size-small);
+      color: var(--gray-600);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .requirement-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .requirement-icon {
+      font-size: 12px;
+    }
+
+    .requirement-item.valid {
+      color: var(--success);
+    }
+
+    .requirement-item.invalid {
+      color: var(--danger);
+    }
   </style>
 </head>
 <body>
@@ -865,10 +989,24 @@
           </div>
         </div>
         <div class="header-right">
-          <div class="user-menu">
+          <div class="user-menu" onclick="toggleUserDropdown()">
             <div class="user-avatar">张</div>
             <span style="color: var(--gray-700); font-weight: 500;">张三（ABC商户）</span>
-            <button class="btn btn-text" onclick="handleLogout()">退出</button>
+            <button class="btn btn-text">
+              <span style="margin-left: 8px;">▼</span>
+            </button>
+            <!-- 用户下拉菜单 -->
+                         <div class="user-dropdown" id="user-dropdown">
+               <div class="dropdown-item" onclick="event.stopPropagation(); showPage('change-password'); toggleUserDropdown();">
+                 <span class="dropdown-icon">🔒</span>
+                 <span>修改密码</span>
+               </div>
+               <div class="dropdown-divider"></div>
+               <div class="dropdown-item" onclick="event.stopPropagation(); handleLogout();">
+                 <span class="dropdown-icon">🚪</span>
+                 <span>退出登录</span>
+               </div>
+             </div>
           </div>
         </div>
       </header>
@@ -1343,6 +1481,58 @@
             </div>
           </div>
         </div>
+
+        <!-- 修改密码页面 -->
+        <div id="change-password-content" class="content-page">
+          <div class="change-password-container">
+            <div class="page-header">
+              <h1 class="page-title">修改密码</h1>
+            </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">密码设置</h3>
+              </div>
+              <div class="card-body">
+                <form class="password-form" onsubmit="handlePasswordChange(event)">
+                  <div class="form-field">
+                    <label class="form-label">当前密码 *</label>
+                    <input type="password" class="form-input" id="current-password" placeholder="请输入当前密码" required>
+                    <div class="form-error" id="current-password-error">当前密码不正确</div>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">新密码 *</label>
+                    <input type="password" class="form-input" id="new-password" placeholder="请输入新密码" required oninput="validateNewPassword()">
+                    <div class="form-error" id="new-password-error">密码格式不正确</div>
+                    <div class="password-requirements">
+                      <div class="requirement-item" id="req-length">
+                        <span class="requirement-icon">✗</span>
+                        <span>密码长度至少6位</span>
+                      </div>
+                      <div class="requirement-item" id="req-different">
+                        <span class="requirement-icon">✗</span>
+                        <span>新密码不能与当前密码相同</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label class="form-label">确认新密码 *</label>
+                    <input type="password" class="form-input" id="confirm-password" placeholder="请再次输入新密码" required oninput="validateConfirmPassword()">
+                    <div class="form-error" id="confirm-password-error">两次输入的密码不一致</div>
+                    <div class="form-success" id="confirm-password-success">密码确认正确</div>
+                  </div>
+                  
+                  <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end; padding-top: var(--spacing-lg); border-top: 1px solid var(--gray-200);">
+                    <button type="button" class="btn btn-secondary" onclick="showPage('descriptors')">取消</button>
+                    <button type="submit" class="btn btn-primary" id="submit-password-btn" disabled>确认修改</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
@@ -1570,6 +1760,13 @@
         targetPage.classList.add('active');
         targetPage.style.display = 'block';
         targetPage.classList.add('fade-in');
+        
+        // 如果是密码修改页面，初始化事件监听器
+        if (pageId === 'change-password') {
+          setTimeout(() => {
+            initializePasswordChangeListeners();
+          }, 100);
+        }
       }
       
       // 更新导航状态
@@ -1582,7 +1779,8 @@
       const navMap = {
         'descriptors': 0,
         'alerts': 1,
-        'alert-detail': 1
+        'alert-detail': 1,
+        'change-password': -1 // 不激活任何导航项
       };
       
       const activeIndex = navMap[pageId];
@@ -1640,13 +1838,14 @@
 
     // 退出登录
     function handleLogout() {
-      if (confirm('确定要退出登录吗？')) {
-        document.getElementById('app-page').classList.remove('active');
-        document.getElementById('login-page').classList.add('active');
-        
-        const loginForm = document.querySelector('.login-form');
-        loginForm.reset();
-      }
+      document.getElementById('app-page').classList.remove('active');
+      document.getElementById('login-page').classList.add('active');
+      
+      const loginForm = document.querySelector('.login-form');
+      loginForm.reset();
+      
+      // 关闭用户下拉菜单
+      document.getElementById('user-dropdown').classList.remove('active');
     }
 
     // 显示添加Descriptor弹窗
@@ -2335,6 +2534,209 @@
         refundInputs.forEach(input => {
           input.required = false;
           input.value = '';
+        });
+      }
+    }
+
+    // 用户下拉菜单控制
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('user-dropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    // 点击外部关闭下拉菜单
+    document.addEventListener('click', function(e) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('user-dropdown');
+      
+      if (!userMenu.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    // 修改密码相关变量
+    let currentUserPassword = 'password123'; // 模拟当前用户密码
+
+    // 验证新密码
+    function validateNewPassword() {
+      const newPassword = document.getElementById('new-password').value;
+      const currentPassword = document.getElementById('current-password').value;
+      const newPasswordInput = document.getElementById('new-password');
+      const lengthReq = document.getElementById('req-length');
+      const differentReq = document.getElementById('req-different');
+      
+      // 检查密码长度
+      if (newPassword.length >= 6) {
+        lengthReq.classList.add('valid');
+        lengthReq.classList.remove('invalid');
+        lengthReq.querySelector('.requirement-icon').textContent = '✓';
+      } else {
+        lengthReq.classList.add('invalid');
+        lengthReq.classList.remove('valid');
+        lengthReq.querySelector('.requirement-icon').textContent = '✗';
+      }
+      
+      // 检查新密码是否与当前密码不同
+      if (newPassword && newPassword !== currentPassword) {
+        differentReq.classList.add('valid');
+        differentReq.classList.remove('invalid');
+        differentReq.querySelector('.requirement-icon').textContent = '✓';
+      } else {
+        differentReq.classList.add('invalid');
+        differentReq.classList.remove('valid');
+        differentReq.querySelector('.requirement-icon').textContent = '✗';
+      }
+      
+      // 更新输入框状态
+      if (newPassword.length >= 6 && newPassword !== currentPassword) {
+        newPasswordInput.classList.remove('error');
+        newPasswordInput.classList.add('success');
+        document.getElementById('new-password-error').style.display = 'none';
+      } else if (newPassword.length > 0) {
+        newPasswordInput.classList.add('error');
+        newPasswordInput.classList.remove('success');
+        if (newPassword.length < 6) {
+          document.getElementById('new-password-error').textContent = '密码长度至少6位';
+          document.getElementById('new-password-error').style.display = 'block';
+        } else if (newPassword === currentPassword) {
+          document.getElementById('new-password-error').textContent = '新密码不能与当前密码相同';
+          document.getElementById('new-password-error').style.display = 'block';
+        }
+      } else {
+        newPasswordInput.classList.remove('error', 'success');
+        document.getElementById('new-password-error').style.display = 'none';
+      }
+      
+      validateConfirmPassword();
+      updateSubmitButton();
+    }
+
+    // 验证确认密码
+    function validateConfirmPassword() {
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const confirmPasswordInput = document.getElementById('confirm-password');
+      const errorElement = document.getElementById('confirm-password-error');
+      const successElement = document.getElementById('confirm-password-success');
+      
+      if (confirmPassword.length === 0) {
+        confirmPasswordInput.classList.remove('error', 'success');
+        errorElement.style.display = 'none';
+        successElement.style.display = 'none';
+      } else if (confirmPassword === newPassword) {
+        confirmPasswordInput.classList.remove('error');
+        confirmPasswordInput.classList.add('success');
+        errorElement.style.display = 'none';
+        successElement.style.display = 'block';
+      } else {
+        confirmPasswordInput.classList.add('error');
+        confirmPasswordInput.classList.remove('success');
+        errorElement.style.display = 'block';
+        successElement.style.display = 'none';
+      }
+      
+      updateSubmitButton();
+    }
+
+    // 更新提交按钮状态
+    function updateSubmitButton() {
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const submitBtn = document.getElementById('submit-password-btn');
+      
+      const isValid = currentPassword.length > 0 && 
+                     newPassword.length >= 6 && 
+                     newPassword !== currentPassword &&
+                     confirmPassword === newPassword;
+      
+      submitBtn.disabled = !isValid;
+    }
+
+    // 处理密码修改
+    function handlePasswordChange(event) {
+      event.preventDefault();
+      
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      // 验证当前密码
+      if (currentPassword !== currentUserPassword) {
+        const currentPasswordInput = document.getElementById('current-password');
+        currentPasswordInput.classList.add('error');
+        document.getElementById('current-password-error').style.display = 'block';
+        return;
+      } else {
+        const currentPasswordInput = document.getElementById('current-password');
+        currentPasswordInput.classList.remove('error');
+        currentPasswordInput.classList.add('success');
+        document.getElementById('current-password-error').style.display = 'none';
+      }
+      
+      // 验证新密码
+      if (newPassword.length < 6) {
+        alert('新密码长度至少6位');
+        return;
+      }
+      
+      if (newPassword === currentPassword) {
+        alert('新密码不能与当前密码相同');
+        return;
+      }
+      
+      // 验证确认密码
+      if (newPassword !== confirmPassword) {
+        alert('两次输入的密码不一致');
+        return;
+      }
+      
+      // 模拟密码修改成功
+      currentUserPassword = newPassword;
+      alert('密码修改成功！请重新登录。');
+      
+      // 重置表单
+      document.querySelector('.password-form').reset();
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.classList.remove('error', 'success');
+      });
+      document.querySelectorAll('.form-error, .form-success').forEach(element => {
+        element.style.display = 'none';
+      });
+      document.querySelectorAll('.requirement-item').forEach(item => {
+        item.classList.remove('valid', 'invalid');
+        item.querySelector('.requirement-icon').textContent = '✗';
+      });
+      document.getElementById('submit-password-btn').disabled = true;
+      
+      // 跳转到登录页面
+      handleLogout();
+    }
+
+    // 为当前密码输入框添加实时验证
+    function initializePasswordChangeListeners() {
+      const currentPasswordInput = document.getElementById('current-password');
+      if (currentPasswordInput) {
+        currentPasswordInput.addEventListener('input', function() {
+          const currentPassword = this.value;
+          
+          if (currentPassword.length > 0) {
+            if (currentPassword === currentUserPassword) {
+              this.classList.remove('error');
+              this.classList.add('success');
+              document.getElementById('current-password-error').style.display = 'none';
+            } else {
+              this.classList.add('error');
+              this.classList.remove('success');
+              document.getElementById('current-password-error').style.display = 'block';
+            }
+          } else {
+            this.classList.remove('error', 'success');
+            document.getElementById('current-password-error').style.display = 'none';
+          }
+          
+          updateSubmitButton();
+          validateNewPassword(); // 重新验证新密码（检查是否与当前密码相同）
         });
       }
     }
