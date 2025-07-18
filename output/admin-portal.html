@@ -258,6 +258,16 @@
       color: var(--info);
     }
 
+    .badge-ethoca {
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    .badge-rdr {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
     .status-badge {
       padding: 6px 12px;
       border-radius: var(--border-radius-md);
@@ -1285,6 +1295,15 @@
               </div>
               
               <div class="filter-group">
+                <label>预警类型</label>
+                <select class="form-select" id="filter-alert-type">
+                  <option value="">全部类型</option>
+                  <option value="ETHOCA">ETHOCA</option>
+                  <option value="RDR">RDR</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
                 <label>争议类型</label>
                 <select class="form-select" id="filter-dispute-type">
                   <option value="">全部类型</option>
@@ -1337,11 +1356,16 @@
                       <input type="checkbox">
                     </th>
                     <th>接收时间</th>
-                    <th>争议类型</th>
+                    <th>预警类型</th>
                     <th>预警来源</th>
+                    <th>预警单ID</th>
+                    <th>争议记录ID</th>
+                    <th>预警时间</th>
+                    <th>争议类型</th>
+                    <th>交易币种</th>
                     <th>交易金额</th>
-                    <th>商户</th>
-                    <th>客户联系人</th>
+                    <th>Descriptor</th>
+                    <th>BIN</th>
                     <th>处理状态</th>
                     <th>操作</th>
                   </tr>
@@ -1433,118 +1457,118 @@
               <h3 class="card-title">更多信息</h3>
             </div>
             <div class="card-body">
-              <!-- V卡信息 -->
-              <div id="visa-details" style="display: none;">
+              <!-- RDR详细信息 -->
+              <div id="rdr-details" style="display: none;">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡BIN</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-bin">418756</span>
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">CAID</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-caid">CA001234</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-caid">CA001234</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡号</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-card-number">****1234</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-card-number">****1234</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">收单银行BIN</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-acquirer-bin">123456</span>
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">收单银行参考号</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-acquirer-ref">REF123456789</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">收单银行参数</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-acquirer-ref">REF123456789</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">授权码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-auth-code">AUTH123</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-auth-code">AUTH123</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">拒付原因代码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-reason-code">10.4</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-reason-code">10.4</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">描述联系人</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-contact">John Smith</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-contact">John Smith</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议金额</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-dispute-amount">$1,250.00</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-dispute-amount">1250.00</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议币种</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-dispute-currency">USD</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">商户类别代码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-mcc">5411</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-mcc">5411</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">规则名称</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-rule-name">非授权交易规则</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-rule-name">非授权交易规则</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">规则类型</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-rule-type">防欺诈</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-rule-type">防欺诈</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易日期</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="visa-transaction-date">2024-11-30</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易的日期</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="rdr-transaction-date">2024-11-30</span>
                   </div>
                 </div>
               </div>
               
-              <!-- M卡信息 -->
-              <div id="mastercard-details" style="display: none;">
+              <!-- ETHOCA详细信息 -->
+              <div id="ethoca-details" style="display: none;">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">预警间隔</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-alert-interval">72小时</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">ARN</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-arn">12345678901234567890123</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-arn">12345678901234567890123</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">授权码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-auth-code">AUTH456</span>
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡BIN</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-bin">512345</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-auth-code">AUTH456</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡号</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-card-number">****5678</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-card-number">****5678</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">拒付原因代码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-reason-code">4837</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-reason-code">4837</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议币种</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-dispute-currency">USD</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">争议金额</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-dispute-amount">$850.00</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-dispute-amount">850.00</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">Initiated By</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-initiated-by">持卡人</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易由谁确认</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-initiated-by">持卡人</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">发卡机构名称</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-issuer-name">招商银行</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">发卡号名称</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-issuer-name">招商银行</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">是否3D责任方</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-3d-liability">否</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-3d-liability">否</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">商户类别代码</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-mcc">5999</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-mcc">5999</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易ID</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-id">TXN_987654322</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">卡组织分配的交易ID</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-transaction-id">TXN_987654322</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易时间</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-time">2024-11-30 15:30:20</span>
+                    <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易日期</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-transaction-date">2024-11-30</span>
                   </div>
                   <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
                     <span style="font-size: var(--font-size-small); color: var(--gray-400); font-weight: 500;">交易类型</span>
-                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="mc-transaction-type">在线支付</span>
+                    <span style="font-size: var(--font-size-base); color: var(--gray-700); font-weight: 600;" id="ethoca-transaction-type">在线支付</span>
                   </div>
                 </div>
               </div>
@@ -1925,22 +1949,22 @@
             </div>
           </div>
           
-          <!-- 授权卡片列表 -->
+          <!-- 授权Descriptor列表 -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">授权卡片</h3>
-              <div style="color: var(--gray-600);" id="merchant-cards-count">
-                共 8 张卡片
+              <h3 class="card-title">授权Descriptor</h3>
+              <div style="color: var(--gray-600);" id="merchant-descriptors-count">
+                共 8 个Descriptor
               </div>
             </div>
             <div style="overflow-x: auto;">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>卡片ID</th>
-                    <th>卡片类型</th>
-                    <th>卡片信息</th>
-                    <th>描述</th>
+                    <th>预警类型</th>
+                    <th>Descriptor</th>
+                    <th>BIN</th>
+                    <th>CAID</th>
                     <th>通知邮箱</th>
                     <th>授权时间</th>
                     <th>最后使用</th>
@@ -1948,7 +1972,7 @@
                     <th>操作</th>
                   </tr>
                 </thead>
-                <tbody id="merchant-cards-table-body">
+                <tbody id="merchant-descriptors-table-body">
                   <!-- 动态生成数据 -->
                 </tbody>
               </table>
@@ -2034,25 +2058,27 @@
     let alertsData = [
       {
         id: 1,
-        alertId: 'CHB_20241201_001',
         receiveTime: '2024-12-01 14:30:25',
+        alertType: 'RDR',
+        source: 'Visa',
+        alertId: 'AL_20241201_001',
+        disputeRecordId: 'DR_20241201_001',
         alertTime: '2024-12-01 14:28:10',
         disputeType: 'fraud',
-        source: 'V卡',
-        amount: '1250.00 USD',
-        merchant: 'ABC商户',
-        contact: 'John Smith',
-        description: '客户声称未进行此笔交易',
-        status: '待处理',
-        // V卡特有字段
+        transactionCurrency: 'USD',
+        transactionAmount: '1250.00',
+        descriptor: 'EXAMPLE-STORE-NYC',
         cardBin: '418756',
+        status: '待处理',
+        // RDR特有字段
         caid: 'CA001234',
         cardNumber: '****1234',
-        acquirerBin: '123456',
         acquirerRef: 'REF123456789',
         authCode: 'AUTH123',
         reasonCode: '10.4',
-        disputeAmount: '1250.00 USD',
+        contact: 'John Smith',
+        disputeAmount: '1250.00',
+        disputeCurrency: 'USD',
         mcc: '5411',
         ruleName: '非授权交易规则',
         ruleType: '防欺诈',
@@ -2060,31 +2086,34 @@
       },
       {
         id: 2,
-        alertId: 'CHB_20241201_002',
         receiveTime: '2024-12-01 13:45:10',
+        alertType: 'ETHOCA',
+        source: 'Mastercard',
+        alertId: 'AL_20241201_002',
+        disputeRecordId: 'DR_20241201_002',
         alertTime: '2024-12-01 13:42:55',
         disputeType: 'dispute',
-        source: 'M卡',
-        amount: '850.00 USD',
-        merchant: 'XYZ商户',
-        contact: '张三',
-        description: '发现重复的交易处理',
+        transactionCurrency: 'USD',
+        transactionAmount: '850.00',
+        descriptor: 'TECH-SERVICES-LLC',
+        cardBin: '512345',
         status: '已处理',
-        // M卡特有字段
+        // ETHOCA特有字段
+        alertInterval: '48',
         arn: '12345678901234567890123',
         authCode: 'AUTH456',
-        cardBin: '512345',
         cardNumber: '****5678',
         reasonCode: '4837',
-        disputeAmount: '850.00 USD',
+        disputeCurrency: 'USD',
+        disputeAmount: '850.00',
         initiatedBy: '持卡人',
         issuerName: '招商银行',
         liability3D: '否',
         mcc: '5999',
         transactionId: 'TXN_987654322',
-        transactionTime: '2024-11-30 15:30:20',
+        transactionDate: '2024-11-30',
         transactionType: '在线支付',
-        // 客户反馈信息（M卡才有）
+        // 客户反馈信息（ETHOCA才有）
         hasFeedback: true,
         feedbackResult: 'stopped',
         feedbackRefundStatus: '已退款',
@@ -2098,24 +2127,27 @@
       },
       {
         id: 3,
-        alertId: 'CHB_20241130_003',
         receiveTime: '2024-11-30 16:20:30',
+        alertType: 'RDR',
+        source: 'Visa',
+        alertId: 'AL_20241130_003',
+        disputeRecordId: 'DR_20241130_003',
         alertTime: '2024-11-30 16:18:45',
         disputeType: 'dispute',
-        source: 'V卡',
-        amount: '320.00 USD',
-        merchant: 'DEF商户',
-        contact: 'Alice Johnson',
-        description: '客户对商品质量有异议',
-        status: '已处理',
+        transactionCurrency: 'USD',
+        transactionAmount: '320.00',
+        descriptor: 'ONLINE-SHOP-DEF',
         cardBin: '456789',
+        status: '已处理',
+        // RDR特有字段
         caid: 'CA005678',
         cardNumber: '****9876',
-        acquirerBin: '654321',
         acquirerRef: 'REF987654321',
         authCode: 'AUTH789',
         reasonCode: '13.1',
-        disputeAmount: '320.00 USD',
+        contact: 'Alice Johnson',
+        disputeAmount: '320.00',
+        disputeCurrency: 'USD',
         mcc: '5732',
         ruleName: '商品质量规则',
         ruleType: '消费者保护',
@@ -2123,51 +2155,58 @@
       },
       {
         id: 4,
-        alertId: 'CHB_20241130_004',
         receiveTime: '2024-11-30 11:15:20',
+        alertType: 'ETHOCA',
+        source: 'Mastercard',
+        alertId: 'AL_20241130_004',
+        disputeRecordId: 'DR_20241130_004',
         alertTime: '2024-11-30 11:12:35',
         disputeType: 'fraud',
-        source: 'M卡',
-        amount: '1500.00 USD',
-        merchant: 'GHI商户',
-        contact: '李四',
-        description: '交易处理过程中出现错误',
+        transactionCurrency: 'USD',
+        transactionAmount: '1500.00',
+        descriptor: 'MOBILE-PAY-GHI',
+        cardBin: '378901',
         status: '处理中',
+        // ETHOCA特有字段
+        alertInterval: '72',
         arn: '98765432109876543210987',
         authCode: 'AUTH321',
-        cardBin: '378901',
         cardNumber: '****4321',
         reasonCode: '4855',
-        disputeAmount: '1500.00 USD',
+        disputeCurrency: 'USD',
+        disputeAmount: '1500.00',
         initiatedBy: '商户',
         issuerName: '工商银行',
         liability3D: '是',
         mcc: '5812',
         transactionId: 'TXN_456789123',
-        transactionTime: '2024-11-29 10:45:15',
+        transactionDate: '2024-11-29',
         transactionType: '移动支付',
         hasFeedback: false
       },
       {
         id: 5,
-        alertId: 'CHB_20241129_005',
         receiveTime: '2024-11-29 09:30:45',
+        alertType: 'RDR',
+        source: 'Visa',
+        alertId: 'AL_20241129_005',
+        disputeRecordId: 'DR_20241129_005',
         alertTime: '2024-11-29 09:28:20',
         disputeType: 'fraud',
-        source: 'V卡',
-        amount: '2100.00 USD',
-        merchant: 'JKL商户',
-        contact: 'Bob Wilson',
-        description: '疑似欺诈性交易活动',
-        status: '已拒绝',
+        transactionCurrency: 'USD',
+        transactionAmount: '2100.00',
+        descriptor: 'FRAUD-CHECK-JKL',
         cardBin: '123456',
+        status: '已拒绝',
+        // RDR特有字段
         caid: 'CA009876',
         cardNumber: '****5555',
-        acquirerBin: '789012',
         acquirerRef: 'REF555666777',
         authCode: 'AUTH555',
         reasonCode: '10.5',
-        disputeAmount: '2100.00 USD',
+        contact: 'Bob Wilson',
+        disputeAmount: '2100.00',
+        disputeCurrency: 'USD',
         mcc: '5499',
         ruleName: '欺诈检测规则',
         ruleType: '风险控制',
@@ -2186,86 +2225,94 @@
         name: 'ABC商户有限公司',
         contact: '张三',
         email: 'contact@abc.com',
-        cardCount: 8,
+        descriptorCount: 8,
         registerTime: '2024-10-15 09:30:25',
         lastLogin: '2024-12-01 10:30:25',
         status: 'enabled',
-        cards: [
+        descriptors: [
           {
-            id: 'CARD001',
-            type: 'V卡',
-            cardInfo: '418756******1234',
-            description: '主要支付卡片',
-            notificationEmail: 'card001@abc.com',
+            id: 'DESC001',
+            alertType: 'ETHOCA',
+            descriptor: 'ABC-STORE-MAIN',
+            bin: '-',
+            caid: '-',
+            notificationEmail: 'desc001@abc.com',
             authTime: '2024-10-15 09:35:20',
             lastUsed: '2024-12-01 14:25:30',
             status: 'active'
           },
           {
-            id: 'CARD002',
-            type: 'M卡',
-            cardInfo: '512345******5678',
-            description: '备用支付卡片',
-            notificationEmail: 'card002@abc.com',
+            id: 'DESC002',
+            alertType: 'RDR',
+            descriptor: 'ABC-BACKUP-PAY',
+            bin: '512345',
+            caid: 'CA001234',
+            notificationEmail: 'desc002@abc.com',
             authTime: '2024-10-16 10:20:15',
             lastUsed: '2024-11-30 16:45:22',
             status: 'active'
           },
           {
-            id: 'CARD003',
-            type: 'V卡',
-            cardInfo: '456789******9876',
-            description: '高额交易专用卡',
-            notificationEmail: 'card003@abc.com',
+            id: 'DESC003',
+            alertType: 'ETHOCA',
+            descriptor: 'ABC-HIGH-VALUE',
+            bin: '-',
+            caid: '-',
+            notificationEmail: 'desc003@abc.com',
             authTime: '2024-10-20 14:15:30',
             lastUsed: '2024-11-28 09:20:45',
             status: 'active'
           },
           {
-            id: 'CARD004',
-            type: 'M卡',
-            cardInfo: '378901******4321',
-            description: '临时测试卡片',
+            id: 'DESC004',
+            alertType: 'RDR',
+            descriptor: 'ABC-TEST-TEMP',
+            bin: '378901',
+            caid: 'CA005678',
             notificationEmail: 'test@abc.com',
             authTime: '2024-10-25 11:30:45',
             lastUsed: '2024-11-25 15:30:20',
             status: 'inactive'
           },
           {
-            id: 'CARD005',
-            type: 'V卡',
-            cardInfo: '123456******5555',
-            description: '线上交易专用',
+            id: 'DESC005',
+            alertType: 'ETHOCA',
+            descriptor: 'ABC-ONLINE-SHOP',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'online@abc.com',
             authTime: '2024-11-01 13:20:10',
             lastUsed: '2024-11-20 10:15:30',
             status: 'active'
           },
           {
-            id: 'CARD006',
-            type: 'M卡',
-            cardInfo: '654321******7777',
-            description: '移动支付卡片',
+            id: 'DESC006',
+            alertType: 'RDR',
+            descriptor: 'ABC-MOBILE-PAY',
+            bin: '654321',
+            caid: 'CA009876',
             notificationEmail: 'mobile@abc.com',
             authTime: '2024-11-05 16:45:25',
             lastUsed: '2024-11-18 14:20:15',
             status: 'active'
           },
           {
-            id: 'CARD007',
-            type: 'V卡',
-            cardInfo: '789012******8888',
-            description: '已暂停使用',
+            id: 'DESC007',
+            alertType: 'ETHOCA',
+            descriptor: 'ABC-SUSPENDED',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'suspended@abc.com',
             authTime: '2024-11-10 09:15:40',
             lastUsed: '2024-11-15 11:30:20',
             status: 'suspended'
           },
           {
-            id: 'CARD008',
-            type: 'M卡',
-            cardInfo: '345678******9999',
-            description: '新开通卡片',
+            id: 'DESC008',
+            alertType: 'RDR',
+            descriptor: 'ABC-NEW-DESC',
+            bin: '345678',
+            caid: 'CA012345',
             notificationEmail: 'new@abc.com',
             authTime: '2024-11-12 15:20:50',
             lastUsed: '2024-11-12 15:25:10',
@@ -2278,56 +2325,61 @@
         name: 'XYZ网络科技',
         contact: '李四',
         email: 'admin@xyz.com',
-        cardCount: 5,
+        descriptorCount: 5,
         registerTime: '2024-11-02 14:20:10',
         lastLogin: '2024-11-30 16:45:30',
         status: 'enabled',
-        cards: [
+        descriptors: [
           {
-            id: 'CARD009',
-            type: 'V卡',
-            cardInfo: '418756******2222',
-            description: '主营业务卡片',
+            id: 'DESC009',
+            alertType: 'ETHOCA',
+            descriptor: 'XYZ-MAIN-BUSINESS',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'main@xyz.com',
             authTime: '2024-11-02 14:25:15',
             lastUsed: '2024-11-30 16:40:20',
             status: 'active'
           },
           {
-            id: 'CARD010',
-            type: 'M卡',
-            cardInfo: '512345******3333',
-            description: '技术服务专用',
+            id: 'DESC010',
+            alertType: 'RDR',
+            descriptor: 'XYZ-TECH-SERVICE',
+            bin: '512345',
+            caid: 'CA024680',
             notificationEmail: 'tech@xyz.com',
             authTime: '2024-11-03 10:30:20',
             lastUsed: '2024-11-29 14:20:15',
             status: 'active'
           },
           {
-            id: 'CARD011',
-            type: 'V卡',
-            cardInfo: '456789******4444',
-            description: '客户服务卡片',
+            id: 'DESC011',
+            alertType: 'ETHOCA',
+            descriptor: 'XYZ-CUSTOMER-SERV',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'service@xyz.com',
             authTime: '2024-11-05 15:45:30',
             lastUsed: '2024-11-28 10:15:25',
             status: 'active'
           },
           {
-            id: 'CARD012',
-            type: 'M卡',
-            cardInfo: '378901******6666',
-            description: '备用卡片',
+            id: 'DESC012',
+            alertType: 'RDR',
+            descriptor: 'XYZ-BACKUP',
+            bin: '378901',
+            caid: 'CA135792',
             notificationEmail: 'backup@xyz.com',
             authTime: '2024-11-08 11:20:40',
             lastUsed: '2024-11-27 16:30:15',
             status: 'inactive'
           },
           {
-            id: 'CARD013',
-            type: 'V卡',
-            cardInfo: '123456******7777',
-            description: '营销推广专用',
+            id: 'DESC013',
+            alertType: 'ETHOCA',
+            descriptor: 'XYZ-MARKETING',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'marketing@xyz.com',
             authTime: '2024-11-10 13:15:20',
             lastUsed: '2024-11-26 09:20:30',
@@ -2340,36 +2392,39 @@
         name: 'DEF贸易公司',
         contact: '王五',
         email: 'info@def.com',
-        cardCount: 3,
+        descriptorCount: 3,
         registerTime: '2024-09-28 11:45:33',
         lastLogin: '2024-11-20 14:30:15',
         status: 'disabled',
-        cards: [
+        descriptors: [
           {
-            id: 'CARD014',
-            type: 'V卡',
-            cardInfo: '418756******8888',
-            description: '贸易结算卡片',
+            id: 'DESC014',
+            alertType: 'RDR',
+            descriptor: 'DEF-TRADE-SETTLE',
+            bin: '418756',
+            caid: 'CA246813',
             notificationEmail: 'trade@def.com',
             authTime: '2024-09-28 11:50:20',
             lastUsed: '2024-11-20 14:25:10',
             status: 'suspended'
           },
           {
-            id: 'CARD015',
-            type: 'M卡',
-            cardInfo: '512345******9999',
-            description: '国际支付卡片',
+            id: 'DESC015',
+            alertType: 'RDR',
+            descriptor: 'DEF-INTL-PAY',
+            bin: '512345',
+            caid: 'CA369147',
             notificationEmail: 'international@def.com',
             authTime: '2024-09-30 16:20:15',
             lastUsed: '2024-11-18 10:15:30',
             status: 'suspended'
           },
           {
-            id: 'CARD016',
-            type: 'V卡',
-            cardInfo: '456789******0000',
-            description: '供应商支付卡',
+            id: 'DESC016',
+            alertType: 'ETHOCA',
+            descriptor: 'DEF-SUPPLIER',
+            bin: '-',
+            caid: '-',
             notificationEmail: 'supplier@def.com',
             authTime: '2024-10-02 09:30:25',
             lastUsed: '2024-11-15 15:20:45',
@@ -2464,7 +2519,7 @@
       document.getElementById('merchant-detail-name').textContent = merchant.name;
       document.getElementById('merchant-detail-contact').textContent = merchant.contact;
       document.getElementById('merchant-detail-email').textContent = merchant.email;
-      document.getElementById('merchant-detail-card-count').textContent = merchant.cardCount;
+      document.getElementById('merchant-detail-card-count').textContent = merchant.descriptorCount;
       document.getElementById('merchant-detail-register-time').textContent = merchant.registerTime;
       document.getElementById('merchant-detail-last-login').textContent = merchant.lastLogin;
       
@@ -2474,36 +2529,36 @@
       statusElement.title = merchant.status === 'enabled' ? '启用' : '停用';
       statusElement.onclick = () => toggleMerchantStatus(merchant.id, merchant.status);
 
-      // 更新卡片数量
-      document.getElementById('merchant-cards-count').textContent = `共 ${merchant.cardCount} 张卡片`;
+      // 更新Descriptor数量
+      document.getElementById('merchant-descriptors-count').textContent = `共 ${merchant.descriptorCount} 个Descriptor`;
 
-      // 渲染卡片列表
-      renderMerchantCards(merchant.cards);
+      // 渲染Descriptor列表
+      renderMerchantCards(merchant.descriptors);
 
       showPage('merchant-detail');
     }
 
-    // 渲染商户卡片列表
-    function renderMerchantCards(cards) {
-      const tbody = document.getElementById('merchant-cards-table-body');
+    // 渲染商户Descriptor列表
+    function renderMerchantCards(descriptors) {
+      const tbody = document.getElementById('merchant-descriptors-table-body');
       
-      tbody.innerHTML = cards.map(card => `
+      tbody.innerHTML = descriptors.map(desc => `
         <tr class="table-row">
-          <td style="font-family: var(--font-family-number);">${card.id}</td>
           <td>
-            <span class="badge ${card.type === 'V卡' ? 'badge-info' : 'badge-secondary'}">${card.type}</span>
+            <span class="badge ${desc.alertType === 'ETHOCA' ? 'badge-ethoca' : 'badge-rdr'}">${desc.alertType}</span>
           </td>
-          <td style="font-family: var(--font-family-number);">${card.cardInfo}</td>
-          <td>${card.description}</td>
-          <td style="font-family: var(--font-family-number);">${card.notificationEmail}</td>
-          <td>${card.authTime}</td>
-          <td>${card.lastUsed}</td>
+          <td>${desc.descriptor}</td>
+          <td style="font-family: var(--font-family-number);">${desc.bin}</td>
+          <td style="font-family: var(--font-family-number);">${desc.caid}</td>
+          <td style="font-family: var(--font-family-number);">${desc.notificationEmail}</td>
+          <td>${desc.authTime}</td>
+          <td>${desc.lastUsed}</td>
           <td>
-            <span class="badge ${getCardStatusClass(card.status)}">${getCardStatusText(card.status)}</span>
+            <span class="badge ${getCardStatusClass(desc.status)}">${getCardStatusText(desc.status)}</span>
           </td>
           <td>
             <div style="display: flex; gap: var(--spacing-xs);">
-              <button class="btn btn-text" onclick="toggleCardStatus('${card.id}', '${card.status}')">${card.status === 'active' ? '停用' : '启用'}</button>
+              <button class="btn btn-text" onclick="toggleDescriptorStatus('${desc.id}', '${desc.status}')">${desc.status === 'active' ? '停用' : '启用'}</button>
             </div>
           </td>
         </tr>
@@ -2561,31 +2616,31 @@
       }
     }
 
-    // 切换卡片状态
-    function toggleCardStatus(cardId, currentStatus) {
-      // 找到对应的商户和卡片
+    // 切换Descriptor状态
+    function toggleDescriptorStatus(descriptorId, currentStatus) {
+      // 找到对应的商户和Descriptor
       let targetMerchant = null;
-      let targetCard = null;
+      let targetDescriptor = null;
       
       for (let merchant of merchantsData) {
-        const card = merchant.cards.find(c => c.id === cardId);
-        if (card) {
+        const descriptor = merchant.descriptors.find(d => d.id === descriptorId);
+        if (descriptor) {
           targetMerchant = merchant;
-          targetCard = card;
+          targetDescriptor = descriptor;
           break;
         }
       }
       
-      if (!targetCard) return;
+      if (!targetDescriptor) return;
 
       const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
       const newStatusText = newStatus === 'active' ? '启用' : '停用';
       
-      if (confirm(`确定要${newStatusText}卡片 ${cardId} 吗？`)) {
-        targetCard.status = newStatus;
+      if (confirm(`确定要${newStatusText}Descriptor ${descriptorId} 吗？`)) {
+        targetDescriptor.status = newStatus;
         
-        // 重新渲染卡片列表
-        renderMerchantCards(targetMerchant.cards);
+        // 重新渲染Descriptor列表
+        renderMerchantCards(targetMerchant.descriptors);
       }
     }
 
@@ -2831,14 +2886,21 @@
           </td>
           <td>${alert.receiveTime}</td>
           <td>
-            <span class="badge ${getDisputeTypeClass(alert.disputeType)}">${alert.disputeType}</span>
+            <span class="badge ${alert.alertType === 'ETHOCA' ? 'badge-info' : 'badge-success'}">${alert.alertType}</span>
           </td>
           <td>
-            <span class="badge ${alert.source === 'V卡' ? 'badge-info' : 'badge-secondary'}">${alert.source}</span>
+            <span class="badge ${alert.source === 'Visa' ? 'badge-info' : 'badge-secondary'}">${alert.source}</span>
           </td>
-          <td style="font-family: var(--font-family-number);">${alert.amount}</td>
-          <td>${alert.merchant}</td>
-          <td>${alert.contact}</td>
+          <td style="font-family: var(--font-family-number);">${alert.alertId}</td>
+          <td style="font-family: var(--font-family-number);">${alert.disputeRecordId}</td>
+          <td>${alert.alertTime}</td>
+          <td>
+            <span class="badge ${getDisputeTypeClass(alert.disputeType)}">${alert.disputeType}</span>
+          </td>
+          <td>${alert.transactionCurrency}</td>
+          <td style="font-family: var(--font-family-number);">${alert.transactionAmount}</td>
+          <td>${alert.descriptor}</td>
+          <td style="font-family: var(--font-family-number);">${alert.cardBin}</td>
           <td>
             <span class="badge ${getAlertStatusClass(alert.status)}">${alert.status}</span>
           </td>
@@ -2879,8 +2941,8 @@
 
       // 更新基础信息
       document.getElementById('detail-alert-id').textContent = alert.alertId;
-      document.getElementById('detail-dispute-type').textContent = alert.disputeType;
-      document.getElementById('detail-dispute-type').className = `badge ${getDisputeTypeClass(alert.disputeType)}`;
+      document.getElementById('detail-dispute-type').textContent = alert.alertType;
+      document.getElementById('detail-dispute-type').className = `badge ${alert.alertType === 'ETHOCA' ? 'badge-ethoca' : 'badge-rdr'}`;
       document.getElementById('detail-status').textContent = alert.status;
       document.getElementById('detail-status').className = `badge ${getAlertStatusClass(alert.status)}`;
       document.getElementById('detail-receive-time').textContent = alert.receiveTime;
@@ -2888,70 +2950,57 @@
       document.getElementById('detail-alert-id-copy').textContent = alert.alertId;
       document.getElementById('detail-dispute-type-copy').textContent = alert.disputeType;
       document.getElementById('detail-source').textContent = alert.source;
-      document.getElementById('detail-amount').textContent = alert.amount + ' USD';
-      document.getElementById('detail-merchant').textContent = alert.merchant;
-      document.getElementById('detail-description').textContent = alert.description;
+      document.getElementById('detail-amount').textContent = `${alert.transactionAmount} ${alert.transactionCurrency}`;
+      document.getElementById('detail-merchant').textContent = alert.descriptor;
+      document.getElementById('detail-description').textContent = `${alert.disputeType} - ${alert.alertType}预警`;
 
-      // 根据预警来源显示不同的详细信息
-      const visaDetails = document.getElementById('visa-details');
-      const mastercardDetails = document.getElementById('mastercard-details');
+      // 根据预警类型显示不同的详细信息
+      const ethocaDetails = document.getElementById('ethoca-details');
+      const rdrDetails = document.getElementById('rdr-details');
       const feedbackViewSection = document.getElementById('feedback-view-section');
 
-      if (alert.source === 'V卡') {
-        // 显示V卡信息
-        visaDetails.style.display = 'block';
-        mastercardDetails.style.display = 'none';
+      if (alert.alertType === 'RDR') {
+        // 显示RDR信息
+        rdrDetails.style.display = 'block';
+        ethocaDetails.style.display = 'none';
         feedbackViewSection.style.display = 'none';
 
-        // 填充V卡数据
-        document.getElementById('visa-bin').textContent = alert.cardBin;
-        document.getElementById('visa-caid').textContent = alert.caid;
-        document.getElementById('visa-card-number').textContent = alert.cardNumber;
-        document.getElementById('visa-acquirer-bin').textContent = alert.acquirerBin;
-        document.getElementById('visa-acquirer-ref').textContent = alert.acquirerRef;
-        document.getElementById('visa-auth-code').textContent = alert.authCode;
-        document.getElementById('visa-reason-code').textContent = alert.reasonCode;
-        document.getElementById('visa-contact').textContent = alert.contact;
-        document.getElementById('visa-dispute-amount').textContent = alert.disputeAmount;
-        document.getElementById('visa-mcc').textContent = alert.mcc;
-        document.getElementById('visa-rule-name').textContent = alert.ruleName;
-        document.getElementById('visa-rule-type').textContent = alert.ruleType;
-        document.getElementById('visa-transaction-date').textContent = alert.transactionDate;
+        // 填充RDR数据
+        document.getElementById('rdr-caid').textContent = alert.caid || '-';
+        document.getElementById('rdr-card-number').textContent = alert.cardNumber || '-';
+        document.getElementById('rdr-acquirer-ref').textContent = alert.acquirerRef || '-';
+        document.getElementById('rdr-auth-code').textContent = alert.authCode || '-';
+        document.getElementById('rdr-reason-code').textContent = alert.reasonCode || '-';
+        document.getElementById('rdr-contact').textContent = alert.contact || '-';
+        document.getElementById('rdr-dispute-amount').textContent = alert.disputeAmount || '-';
+        document.getElementById('rdr-dispute-currency').textContent = alert.disputeCurrency || '-';
+        document.getElementById('rdr-mcc').textContent = alert.mcc || '-';
+        document.getElementById('rdr-rule-name').textContent = alert.ruleName || '-';
+        document.getElementById('rdr-rule-type').textContent = alert.ruleType || '-';
+        document.getElementById('rdr-transaction-date').textContent = alert.transactionDate || '-';
       } else {
-        // 显示M卡信息
-        visaDetails.style.display = 'none';
-        mastercardDetails.style.display = 'block';
+        // 显示ETHOCA信息
+        rdrDetails.style.display = 'none';
+        ethocaDetails.style.display = 'block';
 
-        // 填充M卡数据
-        document.getElementById('mc-arn').textContent = alert.arn;
-        document.getElementById('mc-auth-code').textContent = alert.authCode;
-        document.getElementById('mc-bin').textContent = alert.cardBin;
-        document.getElementById('mc-card-number').textContent = alert.cardNumber;
-        document.getElementById('mc-reason-code').textContent = alert.reasonCode;
-        document.getElementById('mc-dispute-amount').textContent = alert.disputeAmount;
-        document.getElementById('mc-initiated-by').textContent = alert.initiatedBy;
-        document.getElementById('mc-issuer-name').textContent = alert.issuerName;
-        document.getElementById('mc-3d-liability').textContent = alert.liability3D;
-        document.getElementById('mc-mcc').textContent = alert.mcc;
-        document.getElementById('mc-transaction-id').textContent = alert.transactionId;
-        document.getElementById('mc-transaction-time').textContent = alert.transactionTime;
-        document.getElementById('mc-transaction-type').textContent = alert.transactionType;
+        // 填充ETHOCA数据
+        document.getElementById('ethoca-alert-interval').textContent = alert.alertInterval ? alert.alertInterval + '小时' : '-';
+        document.getElementById('ethoca-arn').textContent = alert.arn || '-';
+        document.getElementById('ethoca-auth-code').textContent = alert.authCode || '-';
+        document.getElementById('ethoca-card-number').textContent = alert.cardNumber || '-';
+        document.getElementById('ethoca-reason-code').textContent = alert.reasonCode || '-';
+        document.getElementById('ethoca-dispute-currency').textContent = alert.disputeCurrency || '-';
+        document.getElementById('ethoca-dispute-amount').textContent = alert.disputeAmount || '-';
+        document.getElementById('ethoca-initiated-by').textContent = alert.initiatedBy || '-';
+        document.getElementById('ethoca-issuer-name').textContent = alert.issuerName || '-';
+        document.getElementById('ethoca-3d-liability').textContent = alert.liability3D || '-';
+        document.getElementById('ethoca-mcc').textContent = alert.mcc || '-';
+        document.getElementById('ethoca-transaction-id').textContent = alert.transactionId || '-';
+        document.getElementById('ethoca-transaction-date').textContent = alert.transactionDate || '-';
+        document.getElementById('ethoca-transaction-type').textContent = alert.transactionType || '-';
 
-        // 显示客户反馈（如果有的话）
-        if (alert.hasFeedback) {
-          feedbackViewSection.style.display = 'block';
-          document.getElementById('feedback-result').textContent = alert.feedbackResult;
-          document.getElementById('feedback-refund-status').textContent = alert.feedbackRefundStatus;
-          document.getElementById('feedback-is-fraud').textContent = alert.feedbackIsFraud;
-          document.getElementById('feedback-comment').textContent = alert.feedbackComment;
-          document.getElementById('feedback-transaction-ref').textContent = alert.feedbackTransactionRef;
-          document.getElementById('feedback-refund-id').textContent = alert.feedbackRefundId;
-          document.getElementById('feedback-refund-date').textContent = alert.feedbackRefundDate;
-          document.getElementById('feedback-refund-currency').textContent = alert.feedbackRefundCurrency;
-          document.getElementById('feedback-refund-amount').textContent = alert.feedbackRefundAmount;
-        } else {
-          feedbackViewSection.style.display = 'none';
-        }
+        // ETHOCA暂不显示客户反馈
+        feedbackViewSection.style.display = 'none';
       }
 
       showPage('alert-detail');
@@ -2959,6 +3008,7 @@
 
     // 应用预警筛选
     function applyAlertFilters() {
+      const alertType = document.getElementById('filter-alert-type').value;
       const disputeType = document.getElementById('filter-dispute-type').value;
       const processStatus = document.getElementById('filter-process-status').value;
       const merchant = document.getElementById('filter-merchant').value;
@@ -2968,6 +3018,10 @@
       filteredAlertsData = alertsData.filter(alert => {
         let match = true;
         
+        if (alertType && alert.alertType !== alertType) {
+          match = false;
+        }
+        
         if (disputeType && alert.disputeType !== disputeType) {
           match = false;
         }
@@ -2976,7 +3030,7 @@
           match = false;
         }
         
-        if (merchant && alert.merchant !== merchant) {
+        if (merchant && alert.descriptor && !alert.descriptor.toLowerCase().includes(merchant.toLowerCase())) {
           match = false;
         }
         
@@ -3006,6 +3060,7 @@
 
     // 重置预警筛选
     function resetAlertFilters() {
+      document.getElementById('filter-alert-type').value = '';
       document.getElementById('filter-dispute-type').value = '';
       document.getElementById('filter-process-status').value = '';
       document.getElementById('filter-merchant').value = '';
@@ -3141,4 +3196,5 @@
     window.addEventListener('load', handleResize);
   </script>
 </body>
+</html> 
 </html> 
