@@ -1076,50 +1076,50 @@
             <div class="filters-right">
               <button class="btn btn-secondary" onclick="resetFilters()">重置</button>
               <button class="btn btn-primary" onclick="applyFilters()">搜索</button>
+              </div>
             </div>
-          </div>
-          
+            
           <!-- Descriptor列表 -->
-          <div class="card">
-            <div class="card-header">
+            <div class="card">
+              <div class="card-header">
               <h3 class="card-title">已授权Descriptor</h3>
-            </div>
-            <div class="card-body">
-              <div style="overflow-x: auto;">
-                <table class="data-table">
-                  <thead>
-                    <tr>
+              </div>
+              <div class="card-body">
+                <div style="overflow-x: auto;">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
                       <th>预警类型</th>
                       <th>Descriptor</th>
                       <th>BIN</th>
                       <th>CAID</th>
-                      <th>状态</th>
+                        <th>状态</th>
                       <th>创建时间</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
                   <tbody id="descriptors-table-body">
                     <!-- 动态生成数据 -->
-                  </tbody>
-                </table>
-              </div>
-              
+                    </tbody>
+                  </table>
+        </div>
+
               <!-- 分页器 -->
               <div style="padding: var(--spacing-lg); border-top: 1px solid var(--gray-200); background: var(--bg-secondary);">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="color: var(--gray-600);" id="pagination-info">
                     显示 1-10 条，共 18 条记录
-                  </div>
+            </div>
                   <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
                     <button class="btn btn-secondary" id="prev-btn" onclick="changePage(-1)">上一页</button>
                     <div style="display: flex; gap: var(--spacing-xs);" id="page-numbers">
                       <!-- 动态生成页码 -->
-                    </div>
+          </div>
                     <button class="btn btn-secondary" id="next-btn" onclick="changePage(1)">下一页</button>
-                  </div>
-                </div>
-              </div>
             </div>
+                </div>
+                </div>
+                </div>
           </div>
         </div>
 
@@ -1141,7 +1141,7 @@
                   <input type="date" class="form-input" id="filter-receive-start" style="width: 140px;">
                   <span style="line-height: 2.5; color: var(--gray-500);">至</span>
                   <input type="date" class="form-input" id="filter-receive-end" style="width: 140px;">
-                </div>
+              </div>
               </div>
               
               <div class="filter-group">
@@ -1253,30 +1253,30 @@
           </div>
           
           <!-- 更多信息 -->
-          <div class="card">
-            <div class="card-header">
+              <div class="card">
+                <div class="card-header">
               <h3 class="card-title">更多信息</h3>
-            </div>
-            <div class="card-body">
+                </div>
+                <div class="card-body">
               <!-- V卡信息 -->
               <div id="visa-details" style="display: none;">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
-                  <div class="meta-item">
+                    <div class="meta-item">
                     <span class="meta-label">卡BIN</span>
                     <span class="meta-value" id="visa-bin">418756</span>
-                  </div>
-                  <div class="meta-item">
+                    </div>
+                    <div class="meta-item">
                     <span class="meta-label">CAID</span>
                     <span class="meta-value" id="visa-caid">CA001234</span>
-                  </div>
-                  <div class="meta-item">
+                    </div>
+                    <div class="meta-item">
                     <span class="meta-label">卡号</span>
                     <span class="meta-value" id="visa-card-number">****1234</span>
-                  </div>
-                  <div class="meta-item">
+                    </div>
+                    <div class="meta-item">
                     <span class="meta-label">收单银行BIN</span>
                     <span class="meta-value" id="visa-acquirer-bin">123456</span>
-                  </div>
+                    </div>
                   <div class="meta-item">
                     <span class="meta-label">收单银行参考号</span>
                     <span class="meta-value" id="visa-acquirer-ref">REF123456789</span>
@@ -1284,37 +1284,37 @@
                   <div class="meta-item">
                     <span class="meta-label">授权码</span>
                     <span class="meta-value" id="visa-auth-code">AUTH123</span>
-                  </div>
+                </div>
                   <div class="meta-item">
                     <span class="meta-label">拒付原因代码</span>
                     <span class="meta-value" id="visa-reason-code">10.4</span>
-                  </div>
+              </div>
                   <div class="meta-item">
                     <span class="meta-label">描述联系人</span>
                     <span class="meta-value" id="visa-contact">John Smith</span>
-                  </div>
+                </div>
                   <div class="meta-item">
                     <span class="meta-label">争议金额</span>
                     <span class="meta-value" id="visa-dispute-amount">$1,250.00</span>
-                  </div>
+                        </div>
                   <div class="meta-item">
                     <span class="meta-label">商户类别代码</span>
                     <span class="meta-value" id="visa-mcc">5411</span>
-                  </div>
+                      </div>
                   <div class="meta-item">
                     <span class="meta-label">规则名称</span>
                     <span class="meta-value" id="visa-rule-name">非授权交易规则</span>
-                  </div>
+                    </div>
                   <div class="meta-item">
                     <span class="meta-label">规则类型</span>
                     <span class="meta-value" id="visa-rule-type">防欺诈</span>
-                  </div>
+                        </div>
                   <div class="meta-item">
                     <span class="meta-label">交易日期</span>
                     <span class="meta-value" id="visa-transaction-date">2024-11-30</span>
-                  </div>
-                </div>
-              </div>
+                        </div>
+                        </div>
+                      </div>
               
               <!-- M卡信息 -->
               <div id="mastercard-details" style="display: none;">
@@ -1322,7 +1322,7 @@
                   <div class="meta-item">
                     <span class="meta-label">ARN</span>
                     <span class="meta-value" id="mc-arn">12345678901234567890123</span>
-                  </div>
+                    </div>
                   <div class="meta-item">
                     <span class="meta-label">授权码</span>
                     <span class="meta-value" id="mc-auth-code">AUTH456</span>
@@ -1330,52 +1330,52 @@
                   <div class="meta-item">
                     <span class="meta-label">卡BIN</span>
                     <span class="meta-value" id="mc-bin">512345</span>
-                  </div>
+                </div>
                   <div class="meta-item">
                     <span class="meta-label">卡号</span>
                     <span class="meta-value" id="mc-card-number">****5678</span>
-                  </div>
+              </div>
                   <div class="meta-item">
                     <span class="meta-label">拒付原因代码</span>
                     <span class="meta-value" id="mc-reason-code">4837</span>
-                  </div>
+            </div>
                   <div class="meta-item">
                     <span class="meta-label">争议金额</span>
                     <span class="meta-value" id="mc-dispute-amount">$850.00</span>
-                  </div>
+                </div>
                   <div class="meta-item">
                     <span class="meta-label">Initiated By</span>
                     <span class="meta-value" id="mc-initiated-by">持卡人</span>
-                  </div>
+                          </div>
                   <div class="meta-item">
                     <span class="meta-label">发卡机构名称</span>
                     <span class="meta-value" id="mc-issuer-name">招商银行</span>
-                  </div>
+                          </div>
                   <div class="meta-item">
                     <span class="meta-label">是否3D责任方</span>
                     <span class="meta-value" id="mc-3d-liability">否</span>
-                  </div>
+                          </div>
                   <div class="meta-item">
                     <span class="meta-label">商户类别代码</span>
                     <span class="meta-value" id="mc-mcc">5999</span>
-                  </div>
+                      </div>
                   <div class="meta-item">
                     <span class="meta-label">交易ID</span>
                     <span class="meta-value" id="mc-transaction-id">TXN_987654322</span>
-                  </div>
+                    </div>
                   <div class="meta-item">
                     <span class="meta-label">交易时间</span>
                     <span class="meta-value" id="mc-transaction-time">2024-11-30 15:30:20</span>
-                  </div>
+                    </div>
                   <div class="meta-item">
                     <span class="meta-label">交易类型</span>
                     <span class="meta-value" id="mc-transaction-type">在线支付</span>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          
+        </div>
+
           <!-- 反馈模块（仅M卡显示） -->
           <div class="card" id="feedback-section" style="display: none;">
             <div class="card-header">
@@ -1395,8 +1395,8 @@
                     <option value="shipper_contacted">shipper_contacted</option>
                     <option value="other">other</option>
                   </select>
-                </div>
-
+          </div>
+          
                 <div class="form-field">
                   <label class="form-label">退款状态 *</label>
                   <div style="display: flex; gap: var(--spacing-md);">
@@ -1408,7 +1408,7 @@
                       <input type="radio" name="refund-status" value="not_refunded" onchange="toggleRefundFields(this.value)">
                       <span>未退款 (not_refunded)</span>
                     </label>
-                  </div>
+              </div>
                 </div>
 
                 <div class="form-field">
@@ -1422,14 +1422,14 @@
                       <input type="radio" name="is-fraud" value="false">
                       <span>否</span>
                     </label>
-                  </div>
-                </div>
-
+              </div>
+            </div>
+            
                 <div class="form-field">
                   <label class="form-label">补充意见</label>
                   <textarea class="form-textarea" name="additional-comment" placeholder="请输入补充意见..." rows="3" maxlength="50"></textarea>
                   <small style="color: var(--gray-500);">最多50个字符</small>
-                </div>
+              </div>
 
                 <div class="form-field">
                   <label class="form-label">匹配的流水单号</label>
@@ -1442,12 +1442,12 @@
                   <div class="form-field">
                     <label class="form-label">退款单号 *</label>
                     <input type="text" class="form-input" name="refund-id" placeholder="请输入退款单号" required>
-                  </div>
+              </div>
 
                   <div class="form-field">
                     <label class="form-label">退款日期 *</label>
                     <input type="datetime-local" class="form-input" name="refund-date" required>
-                  </div>
+            </div>
 
                   <div class="form-field">
                     <label class="form-label">退款币种 *</label>
@@ -1464,14 +1464,14 @@
                       <option value="HKD">HKD - 港币</option>
                       <option value="SGD">SGD - 新加坡元</option>
                     </select>
-                  </div>
-
+          </div>
+          
                   <div class="form-field">
                     <label class="form-label">退款金额 *</label>
                     <input type="number" class="form-input" name="refund-amount" placeholder="请输入退款金额" step="0.01" min="0" required>
                     <small style="color: var(--gray-500);">保留两位小数</small>
-                  </div>
-                </div>
+            </div>
+              </div>
                 
                 <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end; padding-top: var(--spacing-lg); border-top: 1px solid var(--gray-200);">
                   <button type="button" class="btn btn-secondary" onclick="showPage('alerts')">返回</button>
@@ -1485,10 +1485,10 @@
         <!-- 修改密码页面 -->
         <div id="change-password-content" class="content-page">
           <div class="change-password-container">
-            <div class="page-header">
+          <div class="page-header">
               <h1 class="page-title">修改密码</h1>
-            </div>
-            
+          </div>
+          
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">密码设置</h3>
@@ -1509,7 +1509,7 @@
                       <div class="requirement-item" id="req-length">
                         <span class="requirement-icon">✗</span>
                         <span>密码长度至少6位</span>
-                      </div>
+                  </div>
                       <div class="requirement-item" id="req-different">
                         <span class="requirement-icon">✗</span>
                         <span>新密码不能与当前密码相同</span>
@@ -1534,19 +1534,19 @@
           </div>
         </div>
       </main>
-    </div>
-  </div>
-
+              </div>
+            </div>
+            
   <!-- 添加Descriptor弹窗 -->
   <div id="add-descriptor-modal" class="modal">
     <div class="modal-content">
-      <div class="card-header">
+              <div class="card-header">
         <h3 class="card-title">添加Descriptor</h3>
         <button class="btn btn-text" onclick="hideAddDescriptorModal()">✕</button>
-      </div>
-      <div class="card-body">
+              </div>
+              <div class="card-body">
         <form class="card-form" onsubmit="handleAddDescriptor(event)">
-          <div class="form-field">
+                  <div class="form-field">
             <label class="form-label">预警类型 *</label>
             <select class="form-select" id="alert-type-select" onchange="toggleAlertTypeFields()" required>
               <option value="">请选择预警类型</option>
@@ -1554,37 +1554,37 @@
               <option value="RDR">RDR</option>
             </select>
             <small style="color: var(--gray-500);">选择预警服务类型</small>
-          </div>
-          
-          <div class="form-field">
+                  </div>
+                  
+                  <div class="form-field">
             <label class="form-label">Descriptor *</label>
             <input type="text" class="form-input" placeholder="请输入Descriptor" required id="descriptor-input">
             <small style="color: var(--gray-500);">用于预警服务识别的商户标识</small>
-          </div>
-          
+                  </div>
+                  
           <div class="form-field" id="bin-field" style="display: none;">
             <label class="form-label">BIN *</label>
             <input type="text" class="form-input" placeholder="请输入6-8位BIN" pattern="[0-9]{6,8}" id="bin-input">
             <small style="color: var(--gray-500);">银行识别号前6-8位</small>
-          </div>
-          
+                  </div>
+                  
           <div class="form-field" id="caid-field" style="display: none;">
             <label class="form-label">CAID *</label>
             <input type="text" class="form-input" placeholder="请输入CAID" id="caid-input">
             <small style="color: var(--gray-500);">客户授权标识符</small>
-          </div>
+              </div>
           
           <div class="form-field">
             <label class="form-label">通知邮箱 *</label>
             <input type="email" class="form-input" placeholder="接收预警通知的邮箱" required id="email-input">
-          </div>
+            </div>
           
           <div style="display: flex; gap: var(--spacing-sm); justify-content: flex-end;">
             <button type="button" class="btn btn-secondary" onclick="hideAddDescriptorModal()">取消</button>
             <button type="submit" class="btn btn-primary">提交报备</button>
           </div>
         </form>
-      </div>
+        </div>
     </div>
   </div>
 
@@ -1838,11 +1838,11 @@
 
     // 退出登录
     function handleLogout() {
-      document.getElementById('app-page').classList.remove('active');
-      document.getElementById('login-page').classList.add('active');
-      
-      const loginForm = document.querySelector('.login-form');
-      loginForm.reset();
+        document.getElementById('app-page').classList.remove('active');
+        document.getElementById('login-page').classList.add('active');
+        
+        const loginForm = document.querySelector('.login-form');
+        loginForm.reset();
       
       // 关闭用户下拉菜单
       document.getElementById('user-dropdown').classList.remove('active');

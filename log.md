@@ -1701,3 +1701,20 @@ caid: alertType === 'ETHOCA' ? '-' : caid,
 - 优化用户界面布局，减少不必要的空白
 - 提升登录界面的视觉平衡感
 - 改善整体用户体验
+
+## v19.1 - 登录界面宽度修正补丁 (2024-12-19)
+
+### 修改文件
+- `output/admin-portal.html`
+- `output/customer-portal.html`
+- `log.md`
+
+### 详细说明
+1. **问题分析**
+   - 用户反馈`customer-portal.html`和`admin-portal.html`的登录宽度未生效，发现`customer-portal.html`被回退为400px，`admin-portal.html`未被覆盖。
+2. **修复措施**
+   - 重新将`.login-container`的`max-width`统一设置为500px，确保三端一致。
+   - 已同步修正并提交。
+
+### 业务价值
+- 保证三端登录界面体验一致，减少视觉割裂。
